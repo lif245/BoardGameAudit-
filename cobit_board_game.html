@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COBIT Board Quest - Ultimate Boss Edition</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #cbd5e1;
+  --gold-primary: #D4AF37;
+  --gold-secondary: #996515;
+  --bg-dark: #0b0f19;
+  --bg-panel: rgba(25, 30, 50, 0.7);
+  --border-gold: rgba(212, 175, 55, 0.3);
+  --boss-red: #e11d48;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Prompt', sans-serif;
+  background: linear-gradient(135deg, #05070a 0%, #151120 50%, #0a0f1a 100%);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+.game-wrap {
+  padding: 24px;
+  max-width: 1050px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 650px;
+  background: var(--bg-panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-gold);
+  border-radius: 24px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+/* Screens */
+.screen { display: none; animation: fadeIn 0.5s ease-in-out; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Start Screen */
+.hero-banner {
+  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-secondary) 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #111;
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+}
+.hero-title { font-size: 32px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(255,255,255,0.3); }
+.hero-sub { font-size: 15px; font-weight: 600; opacity: 0.9; }
+
+.rules-box {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+.rules-box h3 { color: var(--gold-primary); margin-bottom: 8px; font-size: 16px; }
+.rules-box ul { padding-left: 20px; }
+.rules-box li { margin-bottom: 4px; }
+
+.char-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.char-card { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 16px; cursor: pointer; transition: all 0.3s ease; text-align: center; position: relative; }
+.char-card:hover { transform: translateY(-5px); border-color: var(--gold-primary); box-shadow: 0 10px 20px rgba(0,0,0,0.4); background: rgba(212, 175, 55, 0.05); }
+.char-card.selected { border: 2px solid var(--gold-primary); background: rgba(212, 175, 55, 0.15); box-shadow: 0 0 25px rgba(212, 175, 55, 0.2); }
+.char-avatar { font-size: 44px; margin-bottom: 8px; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+.char-name { font-size: 16px; font-weight: 600; color: var(--gold-primary); }
+.char-title { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+.char-bonus { font-size: 11px; background: rgba(212, 175, 55, 0.2); color: var(--gold-primary); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border-gold); }
+
+/* Game Area */
+.game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.turn-badge { padding: 6px 14px; border-radius: 8px; background: rgba(212, 175, 55, 0.15); color: var(--gold-primary); font-weight: 600; border: 1px solid var(--border-gold); }
+
+.main-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+.center-board { display: flex; flex-direction: column; gap: 16px; }
+
+/* Stats Row */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.stat-box { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px; text-align: center; }
+.stat-icon { font-size: 18px; margin-bottom: 4px; display: block; }
+.stat-num { font-size: 24px; font-weight: 600; }
+.stat-lbl { font-size: 11px; color: var(--color-text-secondary); margin-top: 4px; text-transform: uppercase; }
+
+/* Dice & Board */
+.dice-panel { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-gold); border-radius: 16px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+.dice-container { display: flex; gap: 15px; }
+.dice { font-size: 64px; line-height: 1; color: var(--gold-primary); text-shadow: 0 0 20px rgba(212, 175, 55, 0.4); user-select: none; }
+.dice.rolling { animation: shake 0.4s infinite; color: #fff; }
+@keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 25% { transform: translate(-2px, -2px) rotate(-10deg); } 50% { transform: translate(-3px, 0px) rotate(10deg); } 75% { transform: translate(2px, 2px) rotate(-10deg); } 100% { transform: translate(1px, -1px) rotate(0deg); } }
+
+.board-track { background: rgba(0, 0, 0, 0.2); border-radius: 16px; padding: 16px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.track-cell { width: 50px; height: 50px; border-radius: 10px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 20px; position: relative; transition: all 0.3s ease; }
+.track-cell .cell-num { position: absolute; top: 2px; left: 4px; font-size: 9px; color: rgba(255,255,255,0.4); font-weight: 600; }
+.track-cell.t-start { border-color: var(--gold-primary); box-shadow: 0 0 10px var(--border-gold); }
+.track-cell.t-risk { background: rgba(216, 90, 48, 0.1); border-color: rgba(216, 90, 48, 0.3); }
+.track-cell.t-opp { background: rgba(29, 158, 117, 0.1); border-color: rgba(29, 158, 117, 0.3); }
+.track-cell.t-bonus { background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.3); }
+.track-cell.t-boss { background: rgba(225, 29, 72, 0.2); border-color: var(--boss-red); box-shadow: 0 0 15px rgba(225, 29, 72, 0.4); animation: pulseRed 1.5s infinite alternate; }
+@keyframes pulseRed { from { box-shadow: 0 0 5px var(--boss-red); } to { box-shadow: 0 0 25px var(--boss-red); } }
+.player-token { position: absolute; font-size: 26px; z-index: 10; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)); animation: bounce 0.5s infinite alternate; }
+@keyframes bounce { from { transform: translateY(-5px) scale(1.1); } to { transform: translateY(2px) scale(1.1); } }
+
+/* Right Panel */
+.right-panel { display: flex; flex-direction: column; gap: 12px; }
+.panel-box { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px; padding: 14px; }
+.panel-title { font-size: 12px; font-weight: 600; color: var(--gold-primary); margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 4px; }
+
+.cs-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.cs-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--border-gold); }
+.cs-name { font-size: 14px; font-weight: 600; color: #fff; }
+.cs-role { font-size: 11px; color: var(--color-text-secondary); }
+
+.item-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 6px 12px; font-size: 12px; color: #fff; cursor: pointer; transition: all 0.2s; display: inline-block; margin: 3px; }
+.item-chip:hover { background: rgba(212, 175, 55, 0.2); border-color: var(--gold-primary); transform: translateY(-2px); }
+
+.log-panel { max-height: 160px; overflow-y: auto; font-size: 11px; color: var(--color-text-secondary); line-height: 1.6; }
+.log-entry { padding: 6px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.05); }
+
+/* Domains Matrix */
+.domain-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.dom-tile { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 8px 4px; text-align: center; }
+.dom-tile .dt-ico { font-size: 18px; margin-bottom: 4px; display: block; }
+.dom-tile .dt-name { font-size: 10px; font-weight: 600; color: #fff; }
+.dom-tile .dt-lv { font-size: 9px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.dom-tile .dt-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+.dom-tile .dt-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+
+/* Modals */
+.overlay-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 999; backdrop-filter: blur(8px); }
+.card-modal { background: linear-gradient(180deg, #1a1c29 0%, #10121b 100%); border: 2px solid var(--gold-primary); border-radius: 20px; padding: 24px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.1); animation: slideUp 0.3s ease-out; }
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Boss Modal */
+.boss-modal { background: linear-gradient(180deg, #3f0f1c 0%, #110408 100%); border: 2px solid var(--boss-red); border-radius: 20px; padding: 30px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 0 50px rgba(225, 29, 72, 0.5); animation: shakeModal 0.5s ease-out; }
+@keyframes shakeModal { 0% {transform: scale(0.9) rotate(-2deg);} 50% {transform: scale(1.02) rotate(2deg);} 100% {transform: scale(1) rotate(0);} }
+.boss-title { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 2px 10px var(--boss-red); }
+
+.card-icon { font-size: 48px; margin-bottom: 12px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+.card-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+.badge-risk { background: rgba(216, 90, 48, 0.2); color: #ff8a65; border: 1px solid #ff8a65; }
+.badge-opp { background: rgba(29, 158, 117, 0.2); color: #4ade80; border: 1px solid #4ade80; }
+
+.card-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+.card-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 20px; }
+.choice-list { display: flex; flex-direction: column; gap: 8px; }
+.choice-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px; color: #fff; text-align: left; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.choice-btn:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--gold-primary); transform: translateX(5px); }
+.choice-label { font-size: 11px; color: var(--gold-primary); display: block; margin-top: 4px; }
+
+/* Buttons */
+.btn-game { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; color: #fff; transition: all 0.2s; font-family: inherit; }
+.btn-game:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
+.btn-game:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-primary-game { background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-secondary) 100%); color: #111; border: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+.btn-primary-game:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5); filter: brightness(1.1); }
+.btn-boss { background: linear-gradient(135deg, var(--boss-red) 0%, #881337 100%); color: #fff; border: none; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4); width: 100%; font-size: 16px; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s; font-family: 'Prompt', sans-serif;}
+.btn-boss:hover:not(:disabled) { box-shadow: 0 6px 25px rgba(225, 29, 72, 0.6); filter: brightness(1.2); transform: translateY(-2px); }
+
+/* Effect Chips (For Results) */
+.effect-chips { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+.ec { font-size: 12px; padding: 6px 12px; border-radius: 8px; font-weight: 600; }
+.ec-pos { background: rgba(29, 158, 117, 0.2); color: #4ade80; border: 1px solid rgba(29, 158, 117, 0.4); }
+.ec-neg { background: rgba(216, 90, 48, 0.2); color: #ff8a65; border: 1px solid rgba(216, 90, 48, 0.4); }
+
+/* Toast Notification */
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary)); color: #111; border-radius: 10px; padding: 10px 24px; font-size: 14px; font-weight: 600; z-index: 1000; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
+/* End Screen */
+.end-hero { text-align: center; }
+.end-grade { font-size: 72px; margin-bottom: 0; filter: drop-shadow(0 0 20px rgba(212,175,55,0.5)); }
+.score-big { font-size: 48px; font-weight: 700; margin: 20px 0; color: var(--gold-primary); }
+</style>
+</head>
+<body>
+
+<div class="game-wrap" id="gw">
+  <div id="screen-start" class="screen active">
+    <div class="hero-banner">
+      <div style="font-size:48px;margin-bottom:10px">🏛️</div>
+      <div class="hero-title">COBIT Monopoly: Final Boss</div>
+      <div class="hero-sub">ทอยเต๋า อัปเกรดองค์กร และเตรียมปะทะบอสใหญ่แห่งการตรวจสอบ!</div>
+    </div>
+    
+    <div class="rules-box">
+      <h3>📜 กติกาและวิธีเอาชนะ</h3>
+      <ul>
+        <li><b>การเอาชีวิตรอด:</b> หาก <b>Trust หรือ Budget ลดเหลือ 0</b> เกมจะจบทันที (Game Over)</li>
+        <li><b>เงื่อนไขเข้าสู้ Boss (ช่อง 24):</b> ต้องมี Trust > 20 และ Budget > 20 มิเช่นนั้นจะถูกไล่ออก</li>
+        <li><b>วิธีปราบ Boss (HP = 35):</b> แต้มทอยเต๋า 2 ลูก + <b>(ค่า Maturity รวมทั้งหมด x 2)</b> หากรวมกัน >= 35 จะชนะ!</li>
+        <li><i>โบนัส:</i> ถ้าระบบป้องกัน (Risk Buffer) > 50 จะได้บวกพลังโจมตีเพิ่มอีก +5 ตอนสู้บอส</li>
+      </ul>
+    </div>
+
+    <div class="char-grid" id="char-grid"></div>
+    
+    <div style="text-align:center; margin-top: 10px;">
+      <button class="btn-game btn-primary-game" style="font-size:18px;padding:14px 60px; border-radius: 30px;" onclick="startGame()">เข้าสู่กระดานเกม →</button>
+    </div>
+  </div>
+
+  <div id="screen-game" class="screen">
+    <div class="game-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-size:20px;font-weight:600;color:var(--gold-primary)">COBIT Monopoly</span>
+        <span class="turn-badge" id="turn-badge">รอบที่ 1</span>
+      </div>
+      <button class="btn-game" style="font-size:12px;padding:6px 12px" onclick="showHelp()">💡 ดูเป้าหมาย</button>
+    </div>
+
+    <div class="main-layout">
+      <div class="center-board">
+        <div class="stats-row" id="stats-row"></div>
+        
+        <div class="dice-panel">
+          <div class="panel-title" style="border:none; margin:0;">ลูกเต๋าแห่งชะตากรรม</div>
+          <div class="dice-container">
+            <div id="dice1" class="dice">🎲</div>
+          </div>
+          <button class="btn-game btn-primary-game" id="btn-roll" onclick="rollDice()" style="width: 200px; margin-top: 5px;">ทอยลูกเต๋าเดิน</button>
+        </div>
+
+        <div class="board-track" id="board-track"></div>
+      </div>
+
+      <div class="right-panel">
+        <div class="panel-box">
+          <div class="panel-title">ผู้บริหารจัดการ (Player)</div>
+          <div class="cs-header" id="char-status-panel"></div>
+          <div id="ability-btn-container"></div>
+        </div>
+
+        <div class="panel-box">
+          <div class="panel-title">ระดับวุฒิภาวะ (Maturity) - อาวุธตีบอส</div>
+          <div class="domain-grid" id="domain-board"></div>
+        </div>
+
+        <div class="panel-box" id="items-panel" style="display:none">
+          <div class="panel-title">กระเป๋าไอเทม (คลิกเพื่อใช้)</div>
+          <div id="items-container"></div>
+        </div>
+
+        <div class="panel-box" style="flex: 1;">
+          <div class="panel-title">บันทึกเหตุการณ์</div>
+          <div class="log-panel" id="log-panel"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-end" class="screen">
+    <div class="end-hero" id="end-content"></div>
+  </div>
+
+  <div id="toast" class="toast" style="opacity:0"></div>
+  <div id="modal-container"></div>
+</div>
+
+<script>
+// ==========================================
+// GAME DATA & CONFIGURATION
+// ==========================================
+const CHARS = [
+  {id:'cio',name:'Dr. วิชัย',title:'Chief Information Officer',avatar:'👔', bonus:'EDM',bonusDesc:'EDM +2 ทุกครั้งที่อัป',ability:'Executive Override',abilityDesc:'เพิ่ม Trust +15 (ใช้ได้ 1 ครั้ง)',passive:'Trust เริ่มที่ 60',startBonus:{trust:10},abilityUsed:false},
+  {id:'risk',name:'นางสาว สุภา',title:'Risk Manager',avatar:'🛡️', bonus:'APO',bonusDesc:'APO +2 ทุกครั้งที่อัป',ability:'Crisis Shield',abilityDesc:'เพิ่ม Risk +25 (ใช้ได้ 1 ครั้ง)',passive:'Risk เริ่มที่ 65',startBonus:{risk:15},abilityUsed:false},
+  {id:'dev',name:'นาย ธนกร',title:'Lead Developer',avatar:'💻', bonus:'BAI',bonusDesc:'BAI +2 ทุกครั้งที่อัป',ability:'Rapid Deploy',abilityDesc:'ลดผลเสีย Budget (Passive)',passive:'Budget เริ่มที่ 120',startBonus:{budget:20},abilityUsed:false},
+  {id:'auditor',name:'นาง มาลี',title:'Internal Auditor',avatar:'📋', bonus:'MEA',bonusDesc:'MEA +2 ทุกครั้งที่อัป',ability:'Emergency Fund',abilityDesc:'เพิ่ม Budget 20 (ใช้ได้ 1 ครั้ง)',passive:'Maturity เริ่มที่ Lv.2',startBonus:{maturity:1},abilityUsed:false}
+];
+
+const DOMAINS_DEF = [
+  {id:'EDM',name:'EDM',icon:'🏛️',color:'#D4AF37'}, {id:'APO',name:'APO',icon:'📐',color:'#9b87f5'},
+  {id:'BAI',name:'BAI',icon:'🔧',color:'#2dd4bf'}, {id:'DSS',name:'DSS',icon:'⚙️',color:'#fbbf24'},
+  {id:'MEA',name:'MEA',icon:'📊',color:'#f87171'}
+];
+
+const ITEMS = [
+  {id:'budget_pack',name:'💰 กองทุนด่วน',desc:'Budget +20',uses:1,effect:{budget:20}},
+  {id:'trust_boost',name:'🤝 PR Event',desc:'Trust +15',uses:1,effect:{trust:15}},
+  {id:'risk_barrier',name:'🛡️ Firewall',desc:'Risk Buffer +20',uses:1,effect:{risk:20}},
+  {id:'mat_boost',name:'✨ Upgrade',desc:'Maturity +1 ทุกโดเมน',uses:1,effect:{maturity:{EDM:1,APO:1,BAI:1,DSS:1,MEA:1}}}
+];
+
+// เพิ่มเหตุการณ์ให้หลากหลาย ป้องกันการสุ่มซ้ำ
+const EVENTS = {
+  risk: [
+    {title:'ระบบ ERP ขัดข้อง',desc:'ระบบหลักล่ม กระทบ 40 แผนก',domain:'DSS', choices:[{text:'เปิด War Room (+DSS)',effect:{budget:-10,risk:-15,maturity:{DSS:1}},label:'แก้ไขถูกจุด'},{text:'แก้เงียบๆ',effect:{trust:-15,risk:-10},label:'เสียความเชื่อมั่น'}]},
+    {title:'Data Breach!',desc:'ข้อมูลลูกค้ารั่วไหล',domain:'DSS', choices:[{text:'แจ้ง Regulator (+MEA)',effect:{trust:-5,budget:-20,risk:-20,maturity:{MEA:1}},label:'โปร่งใส'},{text:'ปิดข่าวเงียบๆ',effect:{trust:-25,budget:-10,risk:-10},label:'เสี่ยงโดนปรับหนัก'}]},
+    {title:'Ransomware Attack',desc:'โดนเจาะระบบเข้ารหัสไฟล์',domain:'APO', choices:[{text:'ใช้แผน DRP กู้ข้อมูล (+APO)',effect:{budget:-25,risk:-20,maturity:{APO:1}},label:'ปลอดภัย'},{text:'ยอมจ่ายค่าไถ่',effect:{trust:-20,budget:-40,risk:-10},label:'อันตรายและแพง'}]},
+    {title:'Shadow IT พุ่งสูง',desc:'พนักงานแอบใช้แอปเถื่อน',domain:'APO', choices:[{text:'วาง Policy ใหม่ (+APO)',effect:{budget:-10,risk:-10,maturity:{APO:1}},label:'บริหารจัดการดี'},{text:'ไล่บล็อกทีละแอป',effect:{trust:-10,budget:-5,risk:-5},label:'แก้ปัญหาปลายเหตุ'}]}
+  ],
+  opp: [
+    {title:'Cloud Migration',desc:'เสนอส่วนลด 30% สำหรับ Cloud',domain:'BAI', choices:[{text:'ทำ ROI ก่อนย้าย (+BAI)',effect:{trust:+5,budget:+5,risk:+5,maturity:{BAI:1}},label:'รอบคอบ'},{text:'อนุมัติย้ายทันที',effect:{trust:-5,budget:+15,risk:-15},label:'เสี่ยงล่ม'}]},
+    {title:'COBIT Training',desc:'พนักงานขออบรม COBIT',domain:'EDM', choices:[{text:'จัดอบรมทั้งองค์กร (+EDM)',effect:{trust:+10,budget:-15,risk:+10,maturity:{EDM:1}},label:'คุ้มค่าระยะยาว'},{text:'ให้ไปหาอ่านเอง',effect:{budget:0,risk:-5},label:'ประหยัดงบ'}]},
+    {title:'AI Integration',desc:'นำ AI มาใช้วิเคราะห์ข้อมูล',domain:'BAI', choices:[{text:'ตั้งทีมกำกับดูแล AI (+BAI)',effect:{trust:+10,budget:-20,risk:+5,maturity:{BAI:1}},label:'รัดกุม'},{text:'รีบปล่อยใช้งาน',effect:{trust:-5,budget:-5,risk:-20},label:'เสี่ยงผิดพลาด'}]},
+    {title:'Audit Review',desc:'จ้างผู้ตรวจสอบภายนอกมาประเมิน',domain:'MEA', choices:[{text:'ยินยอมให้ตรวจเต็มรูปแบบ (+MEA)',effect:{trust:+15,budget:-15,risk:+10,maturity:{MEA:1}},label:'ยกระดับองค์กร'},{text:'ปฏิเสธการตรวจ',effect:{trust:-10,budget:0,risk:-10},label:'ปกปิดปัญหา'}]}
+  ]
+};
+
+const BOARD_TRACK = [
+  {type:'start', icon:'🏁'},
+  {type:'safe', icon:'🛡️'}, {type:'risk', icon:'⚠️'}, {type:'opp', icon:'💡'}, {type:'safe', icon:'🛡️'},
+  {type:'bonus', icon:'🎁'}, {type:'risk', icon:'⚠️'}, {type:'safe', icon:'🛡️'}, {type:'opp', icon:'💡'},
+  {type:'safe', icon:'🛡️'}, {type:'risk', icon:'⚠️'}, {type:'bonus', icon:'🎁'}, {type:'opp', icon:'💡'},
+  {type:'risk', icon:'⚠️'}, {type:'safe', icon:'🛡️'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'},
+  {type:'safe', icon:'🛡️'}, {type:'bonus', icon:'🎁'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'},
+  {type:'safe', icon:'🛡️'}, {type:'opp', icon:'💡'}, {type:'boss', icon:'👹'}
+];
+
+// ==========================================
+// GAME STATE
+// ==========================================
+let G = {};
+const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+function initGame(charId){
+  const ch = CHARS.find(c=>c.id===charId);
+  G = {
+    turn: 1, position: 0, maxPos: BOARD_TRACK.length - 1,
+    trust: 50, budget: 100, risk: 50,
+    maturity: {EDM:1, APO:1, BAI:1, DSS:1, MEA:1},
+    log: [], char: JSON.parse(JSON.stringify(ch)),
+    items: JSON.parse(JSON.stringify(ITEMS)),
+    isRolling: false, waitingChoice: false
+  };
+  
+  if(G.char.startBonus.trust) G.trust += G.char.startBonus.trust;
+  if(G.char.startBonus.budget) G.budget += G.char.startBonus.budget;
+  if(G.char.startBonus.risk) G.risk += G.char.startBonus.risk;
+  if(G.char.startBonus.maturity) DOMAINS_DEF.forEach(d=>G.maturity[d.id]=2);
+  
+  addLog('เริ่มเกม! รักษา Trust และ Budget ให้ดีเพื่อไปสู้บอส');
+}
+
+// ==========================================
+// RENDERING FUNCTIONS
+// ==========================================
+function renderStart(){
+  document.getElementById('char-grid').innerHTML = CHARS.map(c=>`
+    <div class="char-card ${G.selectedChar===c.id?'selected':''}" onclick="selectChar('${c.id}')" id="cc-${c.id}">
+      <span class="char-avatar">${c.avatar}</span>
+      <div class="char-name">${c.name}</div>
+      <div class="char-title">${c.title}</div>
+      <span class="char-bonus">${c.bonusDesc}</span>
+    </div>`).join('');
+}
+
+function selectChar(id){
+  G.selectedChar = id;
+  document.querySelectorAll('.char-card').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('cc-'+id)?.classList.add('selected');
+}
+
+function startGame(){
+  if(!G.selectedChar) G.selectedChar = 'cio';
+  initGame(G.selectedChar);
+  document.getElementById('screen-start').classList.remove('active');
+  document.getElementById('screen-game').classList.add('active');
+  renderAll();
+}
+
+function renderAll(){
+  renderStats(); renderBoard(); renderRightPanel();
+}
+
+function renderStats(){
+  document.getElementById('turn-badge').textContent = `ทอยครั้งที่ ${G.turn}`;
+  const mTotal = Object.values(G.maturity).reduce((a,b)=>a+b,0);
+  
+  const tCol = G.trust<=20?'#e11d48':G.trust>70?'#4ade80':'var(--gold-primary)';
+  const bCol = G.budget<=20?'#e11d48':'#fff';
+  const rCol = G.risk<=20?'#ff8a65':G.risk>70?'#4ade80':'var(--gold-primary)';
+
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-box"><span class="stat-icon">🤝</span><div class="stat-num" style="color:${tCol}">${G.trust}</div><div class="stat-lbl">Trust</div></div>
+    <div class="stat-box"><span class="stat-icon">💰</span><div class="stat-num" style="color:${bCol}">${G.budget}</div><div class="stat-lbl">Budget</div></div>
+    <div class="stat-box"><span class="stat-icon">🛡️</span><div class="stat-num" style="color:${rCol}">${G.risk}</div><div class="stat-lbl">Risk Buffer</div></div>
+    <div class="stat-box"><span class="stat-icon">✨</span><div class="stat-num">${mTotal}</div><div class="stat-lbl">Maturity Σ</div></div>`;
+}
+
+function renderBoard(){
+  document.getElementById('board-track').innerHTML = BOARD_TRACK.map((t, i) => {
+    let cls = `track-cell t-${t.type}`;
+    let token = i === G.position ? `<div class="player-token">${G.char.avatar}</div>` : '';
+    if(i < G.position) cls += ' passed';
+    return `<div class="${cls}" style="${i<G.position?'opacity:0.4':''}"><span class="cell-num">${i===G.maxPos?'BOSS':i||'START'}</span>${t.icon}${token}</div>`;
+  }).join('');
+}
+
+function renderRightPanel(){
+  document.getElementById('char-status-panel').innerHTML = `<div class="cs-avatar">${G.char.avatar}</div><div><div class="cs-name">${G.char.name}</div><div class="cs-role">${G.char.title}</div></div>`;
+  
+  const abBtn = document.getElementById('ability-btn-container');
+  if(!G.char.abilityUsed && G.char.id !== 'dev') {
+    abBtn.innerHTML = `<button class="btn-game btn-primary-game" style="width:100%; font-size:12px; padding:8px;" onclick="useAbility()">⚡ ใช้สกิล: ${G.char.ability}</button>`;
+  } else if (G.char.id === 'dev') {
+    abBtn.innerHTML = `<button class="btn-game" style="width:100%; font-size:12px; padding:8px;" disabled>⚡ สกิลติดตัว: ลดผลเสีย Budget</button>`;
+  } else {
+    abBtn.innerHTML = `<button class="btn-game" style="width:100%; font-size:12px; padding:8px;" disabled>⚡ ใช้สกิลพิเศษไปแล้ว</button>`;
+  }
+
+  document.getElementById('domain-board').innerHTML = DOMAINS_DEF.map(d=>`<div class="dom-tile"><span class="dt-ico">${d.icon}</span><div class="dt-name">${d.name}</div><div class="dt-lv">Lv.${G.maturity[d.id]}/5</div><div class="dt-bar"><div class="dt-fill" style="width:${(G.maturity[d.id]/5)*100}%;background:${d.color}"></div></div></div>`).join('');
+
+  const items = G.items.filter(i=>i.owned);
+  document.getElementById('items-panel').style.display = items.length ? 'block' : 'none';
+  document.getElementById('items-container').innerHTML = items.map(i=>`<span class="item-chip" onclick="useItem('${i.id}')" title="${i.desc}">${i.name}</span>`).join('');
+
+  document.getElementById('log-panel').innerHTML = G.log.map(l=>`<div class="log-entry"><span style="color:var(--gold-secondary)">[รอบ ${l.turn}]</span> ${l.msg}</div>`).join('');
+}
+
+// ==========================================
+// GAMEPLAY MECHANICS
+// ==========================================
+function rollDice() {
+  if(G.isRolling || G.waitingChoice) return;
+  G.isRolling = true; 
+  document.getElementById('btn-roll').disabled = true;
+  
+  const dEl = document.getElementById('dice1');
+  dEl.classList.add('rolling');
+
+  let spin = setInterval(() => { dEl.textContent = diceFaces[Math.floor(Math.random()*6)]; }, 50);
+  setTimeout(() => {
+    clearInterval(spin); dEl.classList.remove('rolling');
+    const roll = Math.floor(Math.random() * 6) + 1;
+    dEl.textContent = diceFaces[roll - 1];
+    addLog(`ทอยได้ ${roll} แต้ม`);
+    movePlayer(roll);
+  }, 600);
+}
+
+function movePlayer(steps) {
+  let c = 0;
+  let moveInt = setInterval(() => {
+    if(c < steps && G.position < G.maxPos) { 
+      G.position++; c++; renderBoard(); 
+    } else { 
+      clearInterval(moveInt); 
+      setTimeout(() => processTile(G.position), 300); 
+    }
+  }, 250);
+}
+
+function processTile(pos) {
+  G.turn++; 
+  G.isRolling = false;
+  
+  if(pos === G.maxPos) { startBossBattle(); return; } 
+  
+  const t = BOARD_TRACK[pos];
+  if(t.type === 'bonus') { 
+    giveItem(); addLog('หยุดที่ช่อง Bonus! ได้รับไอเทมช่วยเหลือ'); 
+    document.getElementById('btn-roll').disabled = false;
+    checkEnd(); 
+  }
+  else if(t.type === 'safe') {
+    addLog('หยุดที่ช่อง Safe Zone ปลอดภัยดี');
+    document.getElementById('btn-roll').disabled = false;
+    checkEnd();
+  }
+  else if(t.type === 'risk' || t.type === 'opp') {
+    drawCard(t.type);
+  } else {
+    document.getElementById('btn-roll').disabled = false;
+    checkEnd();
+  }
+}
+
+function drawCard(type) {
+  G.waitingChoice = true; 
+  document.getElementById('btn-roll').disabled = true;
+  
+  const pool = EVENTS[type];
+  const ev = pool[Math.floor(Math.random() * pool.length)];
+  G.currentEvent = ev;
+
+  const badge = type==='risk' ? `<span class="card-badge badge-risk">⚠️ Risk Card</span>` : `<span class="card-badge badge-opp">💡 Opportunity Card</span>`;
+  document.getElementById('modal-container').innerHTML = `
+    <div class="overlay-wrap"><div class="card-modal">
+      <div class="card-icon">${type==='risk'?'🛡️':'💼'}</div>
+      ${badge}
+      <div class="card-title">${ev.title}</div>
+      <div class="card-desc">${ev.desc}</div>
+      <div class="choice-list">
+        ${ev.choices.map((c,i)=>`<button class="choice-btn" onclick="makeChoice(${i})">${c.text}<span class="choice-label">${c.label}</span></button>`).join('')}
+      </div>
+    </div></div>`;
+}
+
+function makeChoice(idx) {
+  const choice = G.currentEvent.choices[idx];
+  const eff = choice.effect;
+  applyEffect(eff);
+  
+  // จัดเตรียมข้อมูลชิปเพื่อโชว์ในหน้าผลลัพธ์
+  let chips = [];
+  let bChange = eff.budget || 0;
+  if (G.char.id === 'dev' && bChange < 0) bChange = Math.round(bChange * 0.85);
+
+  if(eff.trust) chips.push(`<span class="ec ${eff.trust>0?'ec-pos':'ec-neg'}">Trust ${eff.trust>0?'+':''}${eff.trust}</span>`);
+  if(bChange) chips.push(`<span class="ec ${bChange>0?'ec-pos':'ec-neg'}">Budget ${bChange>0?'+':''}${bChange}</span>`);
+  if(eff.risk) chips.push(`<span class="ec ${eff.risk>0?'ec-pos':'ec-neg'}">Risk ${eff.risk>0?'+':''}${eff.risk}</span>`);
+  
+  if(eff.maturity) {
+    Object.keys(eff.maturity).forEach(d => {
+      let add = eff.maturity[d];
+      if(G.char.bonus === d && add > 0) add++;
+      chips.push(`<span class="ec ec-pos">${d} +${add}</span>`);
+    });
+  }
+
+  if (chips.length === 0) chips.push(`<span class="ec" style="background:rgba(255,255,255,0.1)">ไม่มีผลกระทบ</span>`);
+
+  // แสดงหน้าต่างสรุปผลลัพธ์แทนที่จะปิดทิ้งเลย
+  document.getElementById('modal-container').innerHTML = `
+    <div class="overlay-wrap">
+      <div class="card-modal" style="border-color:#4ade80;">
+        <div class="card-icon" style="font-size:40px; margin-bottom:5px;">📊</div>
+        <div class="card-title" style="color:#4ade80;">สรุปผลลัพธ์</div>
+        <div class="card-desc" style="margin-bottom:10px;">คุณได้เลือก:<br><b style="color:#fff;">"${choice.text}"</b></div>
+        <div class="effect-chips" style="padding: 15px 0;">
+          ${chips.join('')}
+        </div>
+        <button class="btn-game btn-primary-game" style="width:100%" onclick="closeResultModal()">ดำเนินการต่อ →</button>
+      </div>
+    </div>
+  `;
+}
+
+function closeResultModal() {
+  document.getElementById('modal-container').innerHTML = '';
+  G.waitingChoice = false; 
+  document.getElementById('btn-roll').disabled = false;
+  renderAll(); 
+  checkEnd();
+}
+
+function applyEffect(eff) {
+  if(!eff) return;
+  let bChange = eff.budget || 0;
+  if(G.char.id === 'dev' && bChange < 0) bChange = Math.round(bChange * 0.85); 
+  
+  G.trust = Math.max(0, Math.min(100, G.trust + (eff.trust||0)));
+  G.budget = Math.max(0, Math.min(200, G.budget + bChange));
+  G.risk = Math.max(0, Math.min(100, G.risk + (eff.risk||0)));
+  
+  if(eff.maturity) {
+    Object.entries(eff.maturity).forEach(([d,v]) => {
+      let add = v; 
+      if(G.char.bonus === d && v > 0) add++; 
+      G.maturity[d] = Math.max(1, Math.min(5, G.maturity[d] + add));
+    });
+  }
+}
+
+function giveItem() {
+  const unowned = G.items.filter(i => !i.owned);
+  if(unowned.length > 0) { 
+    unowned[Math.floor(Math.random() * unowned.length)].owned = true; 
+    renderRightPanel(); 
+    showToast('🎁 ได้รับไอเทมช่วยเหลือ!'); 
+  }
+}
+
+function useItem(id) {
+  const item = G.items.find(x => x.id === id);
+  if(item && item.owned) { 
+    applyEffect(item.effect); 
+    item.owned = false; 
+    showToast(`✅ ใช้งาน ${item.name} สำเร็จ!`); 
+    addLog(`ใช้ไอเทม ${item.name}`);
+    renderAll(); 
+    checkEnd(); 
+  }
+}
+
+function useAbility() {
+  if(!G.char.abilityUsed) {
+    G.char.abilityUsed = true;
+    if(G.char.id==='cio') { applyEffect({trust: 15}); showToast('⚡ ใช้พลัง CIO: Trust +15'); }
+    if(G.char.id==='risk') { applyEffect({risk: 25}); showToast('⚡ ใช้พลัง Risk Shield: Risk +25'); }
+    if(G.char.id==='auditor') { applyEffect({budget: 20}); showToast('⚡ อนุมัติงบฉุกเฉิน: Budget +20'); }
+    renderAll(); 
+  }
+}
+
+function checkEnd() {
+  if(G.trust <= 0) endGame('lose_trust');
+  else if(G.budget <= 0) endGame('lose_budget');
+}
+
+// ==========================================
+// BOSS BATTLE MECHANICS
+// ==========================================
+function startBossBattle() {
+  G.waitingChoice = true; 
+  document.getElementById('btn-roll').disabled = true;
+  
+  if(G.trust <= 20 || G.budget <= 20) {
+    document.getElementById('modal-container').innerHTML = `
+      <div class="overlay-wrap"><div class="boss-modal" style="border-color:#555; box-shadow: 0 0 30px rgba(0,0,0,0.8);">
+        <div style="font-size:50px; margin-bottom:10px;">📉</div>
+        <div class="boss-title" style="color:#ff8a65">คุณถูกไล่ออก!</div>
+        <div class="card-desc" style="color:#fff">
+          คุณมาถึงห้องประชุมบอร์ดบริหาร แต่ Trust หรือ Budget ของคุณมีค่าไม่เกิน 20<br><br>
+          บอร์ดบริหารลงมติ "ปลดคุณออกจากตำแหน่ง" ทันทีโดยไม่ต้องชี้แจงผลงาน...
+        </div>
+        <button class="btn-game" style="width:100%; background:#444; margin-top:15px;" onclick="endGame('lose_fired')">จบเกม</button>
+      </div></div>`;
+    return;
+  }
+
+  const mTotal = Object.values(G.maturity).reduce((a,b)=>a+b,0);
+  const mPower = mTotal * 2;
+  const riskBonus = G.risk > 50 ? 5 : 0;
+  
+  G.bossSetup = { hp: 35, mPower, riskBonus };
+
+  document.getElementById('modal-container').innerHTML = `
+    <div class="overlay-wrap"><div class="boss-modal">
+      <div style="font-size:60px; margin-bottom:10px;">👹</div>
+      <div class="boss-title">The Ultimate Auditor</div>
+      <div style="color:var(--color-text-secondary); font-size:13px; margin-bottom:15px;">เผชิญหน้าการตรวจสอบครั้งใหญ่และภัยไซเบอร์ระดับ Zero-Day!</div>
+      
+      <div style="background:rgba(0,0,0,0.5); padding:16px; border-radius:12px; margin-bottom:24px; text-align:left; font-size:14px; border: 1px solid rgba(255,255,255,0.1);">
+        <div style="color:var(--boss-red); font-weight:bold; text-align:center; font-size:16px; margin-bottom:10px;">พลังทำลายของบอส: 35</div>
+        <div style="color:var(--gold-primary); margin-bottom:6px;">🛡️ พลังป้องกันของคุณ:</div>
+        <div style="margin-bottom:4px;">- เลเวล Maturity รวม (${mTotal}) x2 = <b style="color:#4ade80">+${mPower}</b></div>
+        <div style="margin-bottom:4px;">- โบนัส Risk Buffer (>50) = <b style="color:#4ade80">+${riskBonus}</b></div>
+        <div style="margin-top:10px; border-top:1px dashed rgba(255,255,255,0.2); padding-top:10px;">
+          - <b>พลังแห่งโชค (ทอยเต๋า 2 ลูก)</b> = 🎲 ?
+        </div>
+      </div>
+
+      <button class="btn-boss" onclick="rollForBoss()">ทอยลูกเต๋า 2 ลูก สู้บอส! 🎲🎲</button>
+    </div></div>`;
+}
+
+function rollForBoss() {
+  const d1 = Math.floor(Math.random() * 6) + 1;
+  const d2 = Math.floor(Math.random() * 6) + 1;
+  const diceTotal = d1 + d2;
+  
+  const { hp, mPower, riskBonus } = G.bossSetup;
+  const totalPlayerPower = diceTotal + mPower + riskBonus;
+  const isWin = totalPlayerPower >= hp;
+  
+  document.getElementById('modal-container').innerHTML = `
+    <div class="overlay-wrap"><div class="boss-modal">
+      <div style="font-size:50px; margin-bottom:10px;">🎲🎲</div>
+      <div style="font-size:22px; color:#fff; margin-bottom:15px;">ทอยได้ ${d1} และ ${d2} (รวม ${diceTotal})</div>
+      <div style="font-size:18px; color:var(--gold-primary); margin-bottom:24px; background:rgba(0,0,0,0.3); padding:15px; border-radius:10px;">
+        พลังป้องกันสุทธิของคุณ = <b style="font-size:24px; color:${isWin?'#4ade80':'#e11d48'}">${totalPlayerPower}</b> <br>
+        <span style="font-size:13px; color:var(--color-text-secondary);">(บอสโจมตีมา ${hp} ดาเมจ)</span>
+      </div>
+      <button class="btn-boss" style="${isWin?'background:linear-gradient(135deg, #1D9E75, #0f513c)':'background:linear-gradient(135deg, #e11d48, #881337)'}" 
+        onclick="endGame('${isWin ? 'win_boss' : 'lose_boss'}')">
+        ${isWin ? 'ป้องกันสำเร็จ! เข้าสู่บทสรุป 🏆' : 'ระบบล่มสลาย! พ่ายแพ้ 💀'}
+      </button>
+    </div></div>`;
+}
+
+// ==========================================
+// END GAME & UTILITIES
+// ==========================================
+function endGame(res) {
+  document.getElementById('modal-container').innerHTML = '';
+  document.getElementById('screen-game').classList.remove('active');
+  document.getElementById('screen-end').classList.add('active');
+  
+  let title = '', sub = '', icon = '', color = '';
+  
+  if(res === 'lose_trust') { title='Game Over'; sub='ความเชื่อมั่นหมดลง บอร์ดบริหารไล่คุณออก'; icon='👎'; color='#e11d48'; }
+  else if(res === 'lose_budget') { title='Bankrupt'; sub='งบประมาณหมดเกลี้ยง โครงการ IT ล่มสลาย'; icon='💸'; color='#e11d48'; }
+  else if(res === 'lose_fired') { title='Fired Before Audit'; sub='งบและความเชื่อมั่นไม่ถึงเกณฑ์ที่บอร์ดตั้งไว้ (ต้อง >20)'; icon='📉'; color='#e11d48'; }
+  else if(res === 'lose_boss') { title='Audit Failed!'; sub='Maturity ต่ำเกินไป ระบบป้องกันโดนเจาะทะลวงโดยสมบูรณ์'; icon='💀'; color='#e11d48'; }
+  else if(res === 'win_boss') { title='COBIT Grand Master'; sub='เอาชนะการตรวจสอบและป้องกันภัยคุกคามได้อย่างสมบูรณ์แบบ!'; icon='🏆'; color='#4ade80'; }
+
+  document.getElementById('end-content').innerHTML = `
+    <div class="end-grade">${icon}</div>
+    <div style="font-size:36px; font-weight:700; margin:15px 0; color:${color}; text-transform:uppercase;">${title}</div>
+    <div style="color:var(--color-text-secondary); margin-bottom:30px; font-size:16px;">${sub}</div>
+    
+    <div style="display:flex; justify-content:center; gap:16px; margin-bottom: 40px; flex-wrap:wrap;">
+      <div class="stat-box" style="width:120px; background:rgba(0,0,0,0.6);">
+        <div style="font-size:28px; font-weight:bold; color:var(--gold-primary);">${G.trust}</div><div style="font-size:12px;">Trust</div>
+      </div>
+      <div class="stat-box" style="width:120px; background:rgba(0,0,0,0.6);">
+        <div style="font-size:28px; font-weight:bold;">${G.budget}</div><div style="font-size:12px;">Budget</div>
+      </div>
+      <div class="stat-box" style="width:120px; background:rgba(0,0,0,0.6);">
+        <div style="font-size:28px; font-weight:bold; color:#4ade80;">${Object.values(G.maturity).reduce((a,b)=>a+b,0)}</div><div style="font-size:12px;">Maturity Σ</div>
+      </div>
+    </div>
+    
+    <button class="btn-game btn-primary-game" style="font-size:18px; padding:16px 50px; border-radius:30px;" onclick="resetToStart()">เริ่มการผจญภัยใหม่ 🔄</button>
+  `;
+}
+
+function resetToStart() {
+  G = {}; 
+  document.getElementById('screen-end').classList.remove('active');
+  document.getElementById('screen-start').classList.add('active');
+  renderStart();
+}
+
+function addLog(msg) {
+  G.log.unshift({turn: G.turn, msg});
+  if(G.log.length > 20) G.log.pop();
+  if(document.getElementById('log-panel')) renderRightPanel();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast'); 
+  t.textContent = msg; 
+  t.style.opacity = 1;
+  setTimeout(() => t.style.opacity = 0, 3000);
+}
+
+function showHelp() { 
+  showToast('เป้าหมาย: อัปเกรด Maturity ทุกสายให้เยอะที่สุด และรักษา Trust/Budget ให้เกิน 20 ก่อนบอส'); 
+}
+
+renderStart();
+</script>
+</body>
+</html>

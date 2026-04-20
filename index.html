@@ -460,23 +460,14 @@ function renderStats(){
 
 function renderBoard(){
   const trackEl = document.getElementById('board-track');
-  // Define a snake path for 24 tiles (6x4 grid logic but visual snake)
-  const cols = 8;
   trackEl.innerHTML = BOARD_TRACK.map((t, i) => {
-    let row = Math.floor(i / cols);
-    let col = i % cols;
-    if (row % 2 === 1) col = (cols - 1) - col; // Reverse every other row for snake path
-    
-    let left = col * 85 + 40;
-    let top = row * 85 + 40;
-
     let cls = `track-cell t-${t.type}`;
     if(i < G.position) cls += ' passed';
     
     let token = i === G.position ? `<div class="player-token" style="transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);">${G.char.avatar}</div>` : '';
     
     return `
-      <div class="${cls}" style="position:absolute; left:${left}px; top:${top}px;">
+      <div class="${cls}">
         <span class="cell-num">${i===G.maxPos?'BOSS':i||'START'}</span>
         ${t.icon}
         ${token}

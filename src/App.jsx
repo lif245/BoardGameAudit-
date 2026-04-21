@@ -256,12 +256,12 @@ function App() {
               <div className="credits-box" style={{ margin: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
                 <div className="credits-title">👨‍💻 ทีมผู้พัฒนา (Executive Developers)</div>
                 <div className="credits-grid">
-                  <div className="credit-item"><span className="c-dot"></span>ณัฐพล วงค์ชมภู <span className="credit-id">68053881</span></div>
-                  <div className="credit-item"><span className="c-dot"></span>วรเทพ สุวรรณประดิษฐ์ <span className="credit-id">68081605</span></div>
-                  <div className="credit-item"><span className="c-dot"></span>ปฏิภาน เครือใย <span className="credit-id">68019056</span></div>
-                  <div className="credit-item"><span className="c-dot"></span>เกริกกานต์ กิ่งแก้ว <span className="credit-id">68102067</span></div>
-                  <div className="credit-item"><span className="c-dot"></span>นพณัฐ ศรีเหรัญ <span className="credit-id">68050519</span></div>
-                  <div className="credit-item"><span className="c-dot"></span>วรัญญู แก้วเมือง <span className="credit-id">68095907</span></div>
+                  <div className="credit-item"><span className="c-dot"></span><span className="credit-name">ณัฐพล วงค์ชมภู</span> <span className="credit-id">68053881</span></div>
+                  <div className="credit-item"><span className="c-dot"></span><span className="credit-name">วรเทพ สุวรรณประดิษฐ์</span> <span className="credit-id">68081605</span></div>
+                  <div className="credit-item"><span className="c-dot"></span><span className="credit-name">ปฏิภาน เครือใย</span> <span className="credit-id">68019056</span></div>
+                  <div className="credit-item"><span className="c-dot"></span><span className="credit-name">เกริกกานต์ กิ่งแก้ว</span> <span className="credit-id">68102067</span></div>
+                  <div className="credit-item"><span className="c-dot"></span><span className="credit-name">นพณัฐ ศรีเหรัญ</span> <span className="credit-id">68050519</span></div>
+                  <div className="credit-item"><span className="c-dot"></span><span className="credit-name">วรัญญู แก้วเมือง</span> <span className="credit-id">68095907</span></div>
                 </div>
                 <button className="btn-menu" style={{ marginTop: '20px' }} onClick={() => setStartView('menu')}>ย้อนกลับ</button>
               </div>

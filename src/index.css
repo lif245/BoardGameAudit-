@@ -116,9 +116,10 @@ body {
 /* KPI Stats Row */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .stat-box { 
-  background: var(--bg-panel); border: 1px solid var(--border-color); 
-  border-radius: var(--radius-md); padding: 16px; text-align: left; 
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  background: linear-gradient(180deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 0.5) 100%); 
+  border: 1px solid var(--border-color); border-top: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg); padding: 16px; text-align: left; 
+  box-shadow: 0 8px 12px -3px rgba(0,0,0,0.4);
 }
 .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .stat-icon { font-size: 14px; opacity: 0.8; }
@@ -151,8 +152,8 @@ body {
 }
 .dice-face {
   position: absolute; width: 80px; height: 80px;
-  background: radial-gradient(circle at 30% 30%, rgba(30, 64, 175, 0.9) 0%, rgba(15, 23, 42, 0.95) 80%);
-  border: 1px solid rgba(14, 165, 233, 0.4); border-radius: 18px;
+  background: radial-gradient(circle at 30% 30%, rgba(30, 64, 175, 0.95) 0%, rgba(15, 23, 42, 0.98) 80%);
+  border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 4px;
   box-shadow: inset 0 0 20px rgba(0,0,0,0.9), inset 2px 2px 8px rgba(56, 189, 248, 0.6), 0 0 15px rgba(14, 165, 233, 0.3);
   backface-visibility: hidden;
   backdrop-filter: blur(8px);
@@ -184,31 +185,36 @@ body {
 
 /* Audit Board Track */
 .board-track { 
-  background: var(--bg-panel); border-radius: var(--radius-md); padding: 20px; 
-  border: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; 
+  background: radial-gradient(circle at top right, rgba(40, 53, 72, 1) 0%, var(--bg-panel) 100%);
+  border-radius: var(--radius-lg); padding: 24px; border-top: 1px solid rgba(255,255,255,0.08); 
+  border: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; 
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.02), 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 .track-cell { 
-  width: 52px; height: 52px; border-radius: var(--radius-sm); 
-  background: var(--bg-surface); border: 1px solid var(--border-color); 
+  width: 54px; height: 54px; border-radius: var(--radius-md); 
+  background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.05); 
   display: flex; align-items: center; justify-content: center; font-size: 20px; position: relative; 
-  transition: opacity 0.3s ease; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.6), inset 0 -1px 2px rgba(255,255,255,0.03);
 }
-.track-cell .cell-num { position: absolute; top: 4px; left: 4px; font-size: 9px; color: var(--color-text-secondary); font-family: 'Inter', sans-serif; font-weight: 500; }
-.track-cell.t-start { border-color: var(--color-text-primary); border-width: 2px;}
-.track-cell.t-risk { border-bottom: 3px solid var(--status-risk); }
-.track-cell.t-opp { border-bottom: 3px solid var(--status-opp); }
-.track-cell.t-bonus { border-bottom: 3px solid var(--primary-blue); }
-.track-cell.t-boss { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--status-boss); }
+.track-cell.passed { opacity: 0.15; box-shadow: none; border-color: transparent; }
+.track-cell .cell-num { position: absolute; top: 4px; left: 4px; font-size: 9px; color: var(--color-text-secondary); font-family: 'Inter', sans-serif; font-weight: 600; opacity: 0.5; }
+.track-cell.t-start { border: 1px solid rgba(248, 250, 252, 0.3); box-shadow: 0 0 10px rgba(248, 250, 252, 0.1), inset 0 2px 5px rgba(0,0,0,0.5); }
+.track-cell.t-risk { border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 0 15px rgba(245, 158, 11, 0.15), inset 0 2px 5px rgba(0,0,0,0.5); }
+.track-cell.t-opp { border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 15px rgba(16, 185, 129, 0.15), inset 0 2px 5px rgba(0,0,0,0.5); }
+.track-cell.t-bonus { border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2), inset 0 2px 5px rgba(0,0,0,0.5); }
+.track-cell.t-boss { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.6); box-shadow: 0 0 20px rgba(239, 68, 68, 0.3), inset 0 2px 5px rgba(0,0,0,0.5); }
 
+@keyframes floatToken { 0% { transform: translateY(-4px); } 50% { transform: translateY(-12px); } 100% { transform: translateY(-4px); } }
 .player-token { 
-  position: absolute; font-size: 24px; z-index: 10; 
-  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.4)); transform: translateY(-4px);
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: absolute; font-size: 26px; z-index: 10; 
+  filter: drop-shadow(0 8px 8px rgba(0,0,0,0.6));
+  animation: floatToken 2s ease-in-out infinite;
 }
 
 /* Right Panel Modules */
 .right-panel { display: flex; flex-direction: column; gap: 16px; }
-.panel-box { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; }
+.panel-box { background: linear-gradient(135deg, var(--bg-panel) 0%, rgba(15, 23, 42, 0.8) 100%); border: 1px solid var(--border-color); border-top: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-lg); padding: 20px; box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
 .panel-title { font-size: 12px; font-weight: 600; color: var(--color-text-secondary); margin-bottom: 14px; text-transform: uppercase; font-family: 'Inter', sans-serif; letter-spacing: 0.5px; }
 
 .cs-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
@@ -234,7 +240,7 @@ body {
 .dom-row { display: flex; align-items: center; gap: 12px; }
 .dom-row .dt-name { width: 40px; font-size: 11px; font-weight: 600; color: var(--color-text-primary); }
 .dom-row .dt-bar { flex: 1; height: 6px; background: var(--bg-surface); border-radius: 3px; position: relative; }
-.dom-row .dt-fill { height: 100%; border-radius: 3px; background: var(--color-text-secondary); transition: width 0.4s; }
+.dom-row .dt-fill { height: 100%; border-radius: 3px; background: var(--color-text-secondary); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1); box-shadow: 0 0 8px rgba(255,255,255,0.1); }
 .dom-row .dt-lv { width: 24px; font-size: 11px; text-align: right; color: var(--color-text-secondary); font-family: 'Inter', sans-serif;}
 
 /* Modals */

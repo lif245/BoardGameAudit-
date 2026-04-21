@@ -7,7 +7,7 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
   return (
     <div className="right-panel">
       <div className="panel-box">
-        <div className="panel-title">Active Executive Profile</div>
+        <div className="panel-title">ความสามารถเฉพาะตัว (Profile)</div>
         <div className="cs-header">
           <div className="cs-avatar">{char.avatar}</div>
           <div>
@@ -34,13 +34,13 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
       </div>
 
       <div className="panel-box">
-        <div className="panel-title">Maturity Metrics (Level 1-5)</div>
+        <div className="panel-title">ดัชนีชี้วัดขีดความสามารถ (Maturity Lv.1-5)</div>
         <div className="domain-grid">
           {DOMAINS_DEF.map(d => (
             <div className="dom-row" key={d.id}>
               <div className="dt-name" style={{ color: d.color }}>{d.name}</div>
               <div className="dt-bar">
-                <div className="dt-fill" style={{ width: `${(maturity[d.id] / 5) * 100}%`, backgroundColor: d.color }}></div>
+                <div className="dt-fill" style={{ width: `${(maturity[d.id] / 5) * 100}%`, background: `linear-gradient(90deg, transparent 0%, ${d.color} 100%)` }}></div>
               </div>
               <div className="dt-lv">Lv.{maturity[d.id]}</div>
             </div>
@@ -50,7 +50,7 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
 
       {items.filter(i => i.owned).length > 0 && (
         <div className="panel-box">
-          <div className="panel-title">Available Resources</div>
+          <div className="panel-title">ทรัพยากรตัวช่วยที่มีอยู่</div>
           <div>
             {items.filter(i => i.owned).map(i => (
               <span key={i.id} className="item-chip" onClick={() => onUseItem(i.id)} title={i.desc}>
@@ -62,7 +62,7 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
       )}
 
       <div className="panel-box" style={{ flex: 1, minHeight: '220px' }}>
-        <div className="panel-title">System Activity Log</div>
+        <div className="panel-title">บันทึกเหตุการณ์ระบบ (Logs)</div>
         <div className="log-panel">
           {log.map((l, index) => (
             <div className="log-entry" key={index}>

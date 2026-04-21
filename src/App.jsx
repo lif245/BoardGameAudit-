@@ -53,7 +53,7 @@ function App() {
       budget: initialBudget,
       risk: initialRisk,
       maturity: initialMaturity,
-      log: [{ turn: 1, msg: 'System Initialized: ควบคุมตัวแปร Trust และ Budget ให้อยู่ในระดับปลอดภัย' }],
+      log: [{ turn: 1, msg: 'ติดตั้งระบบเสร็จสิ้น: ควบคุมตัวแปร Trust และ Budget ให้อยู่ในระดับปลอดภัย' }],
       char: JSON.parse(JSON.stringify(ch)),
       items: JSON.parse(JSON.stringify(ITEMS))
     });
@@ -134,9 +134,9 @@ function App() {
           newState.items = newState.items.map(i => i.id === itemToGive.id ? { ...i, owned: true } : i);
           showToast('ได้รับไอเทมช่วยเหลือ!');
         }
-        addLog('พบ Resource พิเศษ! ดึงแอตทริบิวต์เข้า Inventory', newState.turn);
+        addLog('พบทรัพยากรพิเศษ! ดึงไอเทมเข้ากระเป๋าสำเร็จ', newState.turn);
       } else if (t.type === 'safe') {
-        addLog('ดำเนินการใน Safe Scope ปกติ ไม่มีข้อบ่งชี้ความเสี่ยง', newState.turn);
+        addLog('ผ่านช่วงดำเนินการเงียบสงบ ไม่มีข้อบ่งชี้ความเสี่ยง', newState.turn);
       } else if (t.type === 'risk' || t.type === 'opp') {
         const pool = EVENTS[t.type];
         const ev = pool[Math.floor(Math.random() * pool.length)];
@@ -235,7 +235,7 @@ function App() {
         <div className="screen active">
           <div className="hero-banner">
             <div className="hero-icon">📊</div>
-            <div className="hero-title">COBIT Framework: Enterprise Audit</div>
+            <div className="hero-title">COBIT Framework: จำลองการตรวจสอบองค์กร</div>
             <div className="hero-sub">แพลตฟอร์มจำลองประเมินการบริหารจัดการ IT ระดับองค์กร (React Engine)</div>
           </div>
           
@@ -249,7 +249,7 @@ function App() {
             </ul>
           </div>
 
-          <div style={{fontSize:'14px', fontWeight:600, color:'var(--color-text-secondary)', marginBottom:'12px', fontFamily:"'Inter',sans-serif", letterSpacing:'0.5px'}}>SELECT EXECUTIVE PROFILE</div>
+          <div style={{fontSize:'14px', fontWeight:600, color:'var(--color-text-secondary)', marginBottom:'12px', fontFamily:"'Inter',sans-serif", letterSpacing:'0.5px'}}>เลือกรับบทบาทผู้บริหาร (SELECT EXECUTIVE PROFILE)</div>
           <div className="char-grid">
             {CHARS.map(c => (
               <div key={c.id} className={`char-card ${selectedCharId === c.id ? 'selected' : ''}`} onClick={() => setSelectedCharId(c.id)}>
@@ -263,7 +263,7 @@ function App() {
           
           <div style={{textAlign: 'right'}}>
             <button className="btn-game btn-primary-game" style={{fontSize: '15px', padding: '12px 30px'}} onClick={startGame}>
-              ▶ Initialize System
+              ▶ เริ่มประเมินระบบ (Initialize System)
             </button>
           </div>
         </div>
@@ -273,11 +273,11 @@ function App() {
 
   if (screen === 'end') {
     let title = '', sub = '', icon = '', color = '';
-    if (endResult === 'lose_trust') { title='Project Aborted'; sub='คุณถูกถอดถอนจากความน่าเชื่อถือที่หมดลง (Trust = 0)'; icon='👎'; color='var(--status-boss)'; }
-    else if (endResult === 'lose_budget') { title='Fund Depleted'; sub='ทรัพยากรการเงินหมดเกลี้ยง โครงการไปต่อไม่ได้'; icon='💸'; color='var(--status-boss)'; }
-    else if (endResult === 'lose_fired') { title='Terminated'; sub='พารามิเตอร์องค์กร (Trust/Budget) ต่ำกว่าเกณฑ์มาตรฐานตอนเทสประเมินสเตจสุดท้าย'; icon='📉'; color='var(--status-boss)'; }
-    else if (endResult === 'lose_boss') { title='Audit Failed'; sub='พบช่องโหว่การตรวจสอบจาก External Audit สรุปผลล้มเหลว'; icon='🚨'; color='var(--status-boss)'; }
-    else if (endResult === 'win_boss') { title='Compliance Achieved'; sub='การตรวจสอบไร้รอยต่อ องค์กรผ่านเกณฑ์ COBIT อย่างสมบูรณ์'; icon='🏆'; color='var(--status-opp)'; }
+    if (endResult === 'lose_trust') { title='โครงการถูกพับ (Project Aborted)'; sub='คุณถูกถอดถอนจากความน่าเชื่อถือที่หมดลง (Trust = 0)'; icon='👎'; color='var(--status-boss)'; }
+    else if (endResult === 'lose_budget') { title='งบประมาณหมดเกลี้ยง (Fund Depleted)'; sub='ทรัพยากรการเงินหมดเกลี้ยง โครงการไปต่อไม่ได้'; icon='💸'; color='var(--status-boss)'; }
+    else if (endResult === 'lose_fired') { title='ยุติบทบาท (Terminated)'; sub='พารามิเตอร์องค์กร (Trust/Budget) ต่ำกว่าเกณฑ์มาตรฐานตอนเทสประเมินสเตจสุดท้าย'; icon='📉'; color='var(--status-boss)'; }
+    else if (endResult === 'lose_boss') { title='การประเมินล้มเหลว (Audit Failed)'; sub='พบช่องโหว่การตรวจสอบจาก External Audit สรุปผลล้มเหลว'; icon='🚨'; color='var(--status-boss)'; }
+    else if (endResult === 'win_boss') { title='ผ่านเกณฑ์การตรวจสอบ (Compliance Achieved)'; sub='การตรวจสอบไร้รอยต่อ องค์กรผ่านเกณฑ์ COBIT อย่างสมบูรณ์'; icon='🏆'; color='var(--status-opp)'; }
 
     const mTotal = gameState ? Object.values(gameState.maturity).reduce((a, b) => a + b, 0) : 0;
 
@@ -292,20 +292,20 @@ function App() {
             <div style={{display:'flex', justifyContent:'center', gap:'16px', marginBottom: '40px', flexWrap:'wrap'}}>
               <div className="stat-box" style={{width:'130px', textAlign:'center'}}>
                 <div style={{fontSize:'24px', fontWeight:600, color:'var(--color-text-primary)', fontFamily:"'Inter'"}}>{gameState?.trust}</div>
-                <div style={{fontSize:'11px', color:'var(--color-text-secondary)', marginTop:'4px', textTransform:'uppercase'}}>Trust Index</div>
+                <div style={{fontSize:'11px', color:'var(--color-text-secondary)', marginTop:'4px', textTransform:'uppercase'}}>ความเชื่อมั่น</div>
               </div>
               <div className="stat-box" style={{width:'130px', textAlign:'center'}}>
                 <div style={{fontSize:'24px', fontWeight:600, fontFamily:"'Inter'"}}>{gameState?.budget}</div>
-                <div style={{fontSize:'11px', color:'var(--color-text-secondary)', marginTop:'4px', textTransform:'uppercase'}}>Budget</div>
+                <div style={{fontSize:'11px', color:'var(--color-text-secondary)', marginTop:'4px', textTransform:'uppercase'}}>งบประมาณ</div>
               </div>
               <div className="stat-box" style={{width:'130px', textAlign:'center'}}>
                 <div style={{fontSize:'24px', fontWeight:600, color:'var(--status-opp)', fontFamily:"'Inter'"}}>{mTotal}</div>
-                <div style={{fontSize:'11px', color:'var(--color-text-secondary)', marginTop:'4px', textTransform:'uppercase'}}>Maturity Σ</div>
+                <div style={{fontSize:'11px', color:'var(--color-text-secondary)', marginTop:'4px', textTransform:'uppercase'}}>วุฒิภาวะรวม</div>
               </div>
             </div>
             
             <button className="btn-game btn-primary-game" style={{fontSize: '15px', padding: '12px 30px'}} onClick={() => { setScreen('start'); setGameState(null); }}>
-              Initiate New Assessment 🔄
+              เริ่มการประเมินรอบใหม่ 🔄
             </button>
           </div>
         </div>
@@ -336,19 +336,19 @@ function App() {
       <div className="screen active">
         <div className="game-header">
           <div style={{display:'flex', alignItems:'center', gap:'16px'}}>
-            <span className="header-title">Audit Progression</span>
-            <span className="turn-badge">Iteration {gameState.turn}</span>
+            <span className="header-title">ความคืบหน้าการตรวจสอบ (Progress)</span>
+            <span className="turn-badge">รอบเดินที่ {gameState.turn}</span>
           </div>
-          <button className="btn-game" onClick={() => showToast('Directive: Maximize Maturity & keep Trust/Budget > 20')}>ⓘ System Directive</button>
+          <button className="btn-game" onClick={() => showToast('เป้าหมาย: เพิ่มระดับ Maturity ให้เยอะที่สุด และคุม Trust/Budget ไม่ให้ต่ำกว่า 20')}>ⓘ เป้าหมายระบบ</button>
         </div>
 
         <div className="main-layout">
           <div className="center-board">
             <div className="stats-row">
-              {drawStat('Trust Index', gameState.trust, '🤝')}
-              {drawStat('Budget', gameState.budget, '💰')}
-              {drawStat('Risk Buffer', gameState.risk, '🛡️')}
-              {drawStat('Maturity Σ', mTotal, '✨', 0)}
+              {drawStat('ความเชื่อมั่น (Trust)', gameState.trust, '🤝')}
+              {drawStat('งบดุล (Budget)', gameState.budget, '💰')}
+              {drawStat('เกราะความเสี่ยง (Risk)', gameState.risk, '🛡️')}
+              {drawStat('ระดับวุฒิภาวะรวม', mTotal, '✨', 0)}
             </div>
             
             <Dice ref={diceRef} onRollComplete={handleRollComplete} rollDisabled={eventModal || resultModal || bossActive} />

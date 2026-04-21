@@ -8,6 +8,7 @@ import AudioPlayer from './components/AudioPlayer';
 
 function App() {
   const [screen, setScreen] = useState('start'); // start, game, end
+  const [startView, setStartView] = useState('menu'); // menu, rules, credits, char_select
   const [selectedCharId, setSelectedCharId] = useState('cio');
   
   const [gameState, setGameState] = useState(null);
@@ -234,52 +235,76 @@ function App() {
     return (
       <div className="game-wrap">
         <AudioPlayer />
-        <div className="screen active">
-          <div className="hero-banner">
-            <div className="hero-icon">📊</div>
-            <div className="hero-title">COBIT Framework: จำลองการตรวจสอบองค์กร</div>
-            <div className="hero-sub">แพลตฟอร์มจำลองประเมินการบริหารจัดการ IT ระดับองค์กร (React Engine)</div>
+        <div className="screen active" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '650px', background: 'radial-gradient(circle at center, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 1) 100%)' }}>
+          
+          <div className="game-logo-container" style={{ textAlign: 'center', marginBottom: '40px', animation: 'floatToken 4s ease-in-out infinite' }}>
+            <div style={{ fontSize: '80px', marginBottom: '10px', filter: 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.5))' }}>📊</div>
+            <div style={{ fontSize: '48px', fontWeight: 800, letterSpacing: '4px', color: 'var(--color-text-primary)', textShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 10px rgba(255, 255, 255, 0.2)' }}>COBIT QUEST</div>
+            <div style={{ fontSize: '16px', color: 'var(--color-text-secondary)', letterSpacing: '6px', textTransform: 'uppercase', marginTop: '4px' }}>Enterprise Audit Simulator</div>
           </div>
 
-          <div className="credits-box">
-            <div className="credits-title">👨‍💻 ทีมผู้พัฒนา (Executive Developers)</div>
-            <div className="credits-grid">
-              <div className="credit-item"><span className="c-dot"></span>ณัฐพล วงค์ชมภู <span className="credit-id">68053881</span></div>
-              <div className="credit-item"><span className="c-dot"></span>วรเทพ สุวรรณประดิษฐ์ <span className="credit-id">68081605</span></div>
-              <div className="credit-item"><span className="c-dot"></span>ปฏิภาน เครือใย <span className="credit-id">68019056</span></div>
-              <div className="credit-item"><span className="c-dot"></span>เกริกกานต์ กิ่งแก้ว <span className="credit-id">68102067</span></div>
-              <div className="credit-item"><span className="c-dot"></span>นพณัฐ ศรีเหรัญ <span className="credit-id">68050519</span></div>
-              <div className="credit-item"><span className="c-dot"></span>วรัญญู แก้วเมือง <span className="credit-id">68095907</span></div>
+          {startView === 'menu' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}>
+              <button className="btn-menu primary" onClick={() => setStartView('char_select')}>▶ เริ่มเกม (Start Game)</button>
+              <button className="btn-menu" onClick={() => setStartView('rules')}>📖 ระเบียบการ (Rules)</button>
+              <button className="btn-menu" onClick={() => setStartView('credits')}>👨‍💻 ทีมผู้พัฒนา (Credits)</button>
             </div>
-          </div>
-          
-          <div className="rules-box">
-            <h3>📋 ระเบียบและพารามิเตอร์การประเมิน</h3>
-            <ul>
-              <li><b>การประเมินสถานะ:</b> หาก <b>Trust หรือ Budget ลดเหลือ 0</b> จะถือว่าระบบล้มเหลว (Project Terminated)</li>
-              <li><b>เกณฑ์เข้าประชุมบอร์ดผู้บริหาร (Board Meeting - ช่อง 24):</b> ต้องมีองค์ประกอบ Trust &gt; 20 และ Budget &gt; 20</li>
-              <li><b>การป้องกัน Audit (เกณฑ์ผ่าน &gt; 35 แต้ม):</b> แต้มทอย 2 ลูก + <b>(ระดับผลรวม Maturity x 2)</b> ข้ามเส้นมาตรฐาน</li>
-              <li><i>Security Bonus:</i> ถ้าระบบป้องกัน (Risk Buffer) &gt; 50 จะได้คะแนนสมทบการตรวจสอบ (Compliance) อีก +5</li>
-            </ul>
-          </div>
+          )}
 
-          <div style={{fontSize:'14px', fontWeight:600, color:'var(--color-text-secondary)', marginBottom:'12px', fontFamily:"'Inter',sans-serif", letterSpacing:'0.5px'}}>เลือกรับบทบาทผู้บริหาร (SELECT EXECUTIVE PROFILE)</div>
-          <div className="char-grid">
-            {CHARS.map(c => (
-              <div key={c.id} className={`char-card ${selectedCharId === c.id ? 'selected' : ''}`} onClick={() => setSelectedCharId(c.id)}>
-                <span className="char-avatar">{c.avatar}</span>
-                <div className="char-name">{c.name}</div>
-                <div className="char-title">{c.title}</div>
-                <span className="char-bonus">{c.bonusDesc}</span>
+          {startView === 'credits' && (
+            <div className="menu-modal-container">
+              <div className="credits-box" style={{ margin: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
+                <div className="credits-title">👨‍💻 ทีมผู้พัฒนา (Executive Developers)</div>
+                <div className="credits-grid">
+                  <div className="credit-item"><span className="c-dot"></span>ณัฐพล วงค์ชมภู <span className="credit-id">68053881</span></div>
+                  <div className="credit-item"><span className="c-dot"></span>วรเทพ สุวรรณประดิษฐ์ <span className="credit-id">68081605</span></div>
+                  <div className="credit-item"><span className="c-dot"></span>ปฏิภาน เครือใย <span className="credit-id">68019056</span></div>
+                  <div className="credit-item"><span className="c-dot"></span>เกริกกานต์ กิ่งแก้ว <span className="credit-id">68102067</span></div>
+                  <div className="credit-item"><span className="c-dot"></span>นพณัฐ ศรีเหรัญ <span className="credit-id">68050519</span></div>
+                  <div className="credit-item"><span className="c-dot"></span>วรัญญู แก้วเมือง <span className="credit-id">68095907</span></div>
+                </div>
+                <button className="btn-menu" style={{ marginTop: '20px' }} onClick={() => setStartView('menu')}>ย้อนกลับ</button>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
           
-          <div style={{textAlign: 'right'}}>
-            <button className="btn-game btn-primary-game" style={{fontSize: '15px', padding: '12px 30px'}} onClick={startGame}>
-              ▶ เริ่มประเมินระบบ (Initialize System)
-            </button>
-          </div>
+          {startView === 'rules' && (
+            <div className="menu-modal-container">
+              <div className="rules-box" style={{ margin: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', maxWidth: '600px' }}>
+                <h3 style={{ fontSize: '18px', marginBottom: '16px', color: 'var(--primary-blue)' }}>📋 ระเบียบและพารามิเตอร์การประเมิน</h3>
+                <ul style={{ fontSize: '15px', lineHeight: '1.8' }}>
+                  <li><b>การประเมินสถานะ:</b> หาก <b>Trust หรือ Budget ลดเหลือ 0</b> จะถือว่าระบบล้มเหลว (Project Terminated) ทันที</li>
+                  <li><b>เกณฑ์เข้าประชุมบอร์ดผู้บริหาร:</b> ต้องมีองค์ประกอบ Trust &gt; 20 และ Budget &gt; 20 เมื่อถึงช่องสุดท้าย</li>
+                  <li><b>การป้องกัน Audit ครั้งสุดท้าย:</b> แต้มทอย 2 ลูก + <b>(ระดับผลรวม Maturity x 2)</b> ข้ามเส้นมาตรฐาน (35 แต้ม)</li>
+                  <li><i>Security Bonus:</i> ถ้าระบบป้องกัน (Risk Buffer) &gt; 50 ตอนเจอบอส จะได้คะแนนสมทบให้อีก +5</li>
+                </ul>
+                <button className="btn-menu" style={{ marginTop: '20px' }} onClick={() => setStartView('menu')}>ย้อนกลับ</button>
+              </div>
+            </div>
+          )}
+
+          {startView === 'char_select' && (
+            <div className="menu-modal-container" style={{ width: '100%', maxWidth: '900px' }}>
+              <div style={{fontSize:'16px', fontWeight:600, color:'var(--color-text-secondary)', marginBottom:'16px', textAlign:'center', letterSpacing:'1px'}}>เลือกรับบทบาทผู้บริหาร (SELECT EXECUTIVE PROFILE)</div>
+              <div className="char-grid">
+                {CHARS.map(c => (
+                  <div key={c.id} className={`char-card ${selectedCharId === c.id ? 'selected' : ''}`} style={{ background: 'rgba(30, 41, 59, 0.9)', backdropFilter: 'blur(10px)' }} onClick={() => setSelectedCharId(c.id)}>
+                    <span className="char-avatar" style={{ fontSize: '42px' }}>{c.avatar}</span>
+                    <div className="char-name">{c.name}</div>
+                    <div className="char-title">{c.title}</div>
+                    <span className="char-bonus">{c.bonusDesc}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <div style={{display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '32px'}}>
+                <button className="btn-menu" style={{ width: '160px' }} onClick={() => setStartView('menu')}>ย้อนกลับ</button>
+                <button className="btn-menu primary" style={{ width: '220px', fontSize: '15px', fontWeight: 600 }} onClick={startGame}>
+                  ▶ เริ่มระบบ (Initialize)
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

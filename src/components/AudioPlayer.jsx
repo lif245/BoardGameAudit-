@@ -5,11 +5,30 @@ const AudioPlayer = () => {
   const [volume, setVolume] = useState(0.5);
   const audioRef = useRef(null);
 
+  const [hasInteracted, setHasInteracted] = useState(false);
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }
   }, [volume]);
+
+  useEffect(() => {
+    const startAudio = () => {
+      if (!hasInteracted && audioRef.current && !isPlaying) {
+        audioRef.current.play().then(() => {
+          setIsPlaying(true);
+          setHasInteracted(true);
+        }).catch(e => console.log('Autoplay prevented', e));
+      }
+      document.removeEventListener('click', startAudio);
+    };
+    
+    if (!hasInteracted) {
+      document.addEventListener('click', startAudio);
+    }
+    return () => document.removeEventListener('click', startAudio);
+  }, [hasInteracted, isPlaying]);
 
   const togglePlay = () => {
     if (audioRef.current) {

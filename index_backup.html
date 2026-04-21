@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COBIT Framework - Executive Evaluation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Corporate Admin Dashboard Theme (Dark Slate) */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --primary-blue: #3b82f6;
+  --primary-blue-hover: #2563eb;
+  --bg-dark: #0f172a;
+  --bg-panel: #1e293b;
+  --bg-surface: #334155;
+  --border-color: #334155;
+  --border-focus: #475569;
+  
+  --status-risk: #f59e0b;
+  --status-opp: #10b981;
+  --status-boss: #ef4444;
+  --status-neutral: #64748b;
+  
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Prompt', 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-x: hidden;
+}
+
+/* Formal Container Layout */
+.game-wrap {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: 650px;
+  background: var(--bg-dark);
+  position: relative;
+}
+
+/* Screens */
+.screen { display: none; animation: fadeIn 0.3s ease-out; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Hero / Header Section */
+.hero-banner {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  text-align: center;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+.hero-icon { font-size: 32px; margin-bottom: 12px; color: var(--primary-blue); }
+.hero-title { font-size: 28px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; }
+.hero-sub { font-size: 15px; font-weight: 400; color: var(--color-text-secondary); }
+
+.rules-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+.rules-box h3 { color: var(--color-text-primary); margin-bottom: 12px; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.rules-box ul { padding-left: 24px; }
+.rules-box li { margin-bottom: 6px; }
+.rules-box b { color: var(--color-text-primary); font-weight: 600; }
+
+/* Character Selection Grid */
+.char-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.char-card { 
+  background: var(--bg-panel); 
+  border: 1px solid var(--border-color); 
+  border-radius: var(--radius-md); 
+  padding: 20px; 
+  cursor: pointer; 
+  transition: all 0.2s ease; 
+  text-align: center; 
+}
+.char-card:hover { border-color: var(--border-focus); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.char-card.selected { border: 2px solid var(--primary-blue); background: rgba(59, 130, 246, 0.05); }
+.char-avatar { font-size: 36px; margin-bottom: 12px; display: block; }
+.char-name { font-size: 16px; font-weight: 600; color: var(--color-text-primary); margin-bottom: 4px; }
+.char-title { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 12px; }
+.char-bonus { font-size: 11px; background: var(--bg-surface); color: var(--color-text-secondary); padding: 4px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); white-space: nowrap; }
+
+/* Dashboard Header */
+.game-header { 
+  display: flex; justify-content: space-between; align-items: center; 
+  margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); 
+}
+.header-title { font-size: 18px; font-weight: 600; font-family: 'Inter', sans-serif; letter-spacing: -0.5px; }
+.turn-badge { 
+  padding: 4px 12px; border-radius: 16px; background: var(--bg-surface); 
+  color: var(--color-text-primary); font-size: 13px; font-weight: 500; border: 1px solid var(--border-color); 
+}
+
+/* Layout */
+.main-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+.center-board { display: flex; flex-direction: column; gap: 16px; }
+
+/* KPI Stats Row */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat-box { 
+  background: var(--bg-panel); border: 1px solid var(--border-color); 
+  border-radius: var(--radius-md); padding: 16px; text-align: left; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.stat-icon { font-size: 14px; opacity: 0.8; }
+.stat-lbl { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-num { font-size: 24px; font-weight: 600; font-family: 'Inter', sans-serif; }
+
+/* 3D Dice Evaluation Panel */
+.dice-panel { 
+  background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: var(--radius-md); 
+  padding: 30px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; 
+}
+
+.dice-panel-title { font-size: 13px; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px; }
+
+/* 3D CSS Dice Structure */
+.dice-scene {
+  width: 80px; height: 80px; margin: 0 auto 24px auto;
+  perspective: 600px; position: relative;
+}
+.dice-scene::after {
+  content: ''; position: absolute; bottom: -20px; left: 5px; right: 5px;
+  height: 20px; background: rgba(0,0,0,0.5); filter: blur(8px);
+  border-radius: 50%; transform: rotateX(60deg); pointer-events: none;
+}
+.dice-cube {
+  width: 100%; height: 100%; position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1.2s cubic-bezier(0.1, 0.8, 0.3, 1);
+  transform: rotateX(-15deg) rotateY(15deg);
+}
+.dice-face {
+  position: absolute; width: 80px; height: 80px;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e2e8f0 70%, #cbd5e1 100%);
+  border: 1px solid rgba(255,255,255,0.7); border-radius: 16px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1), inset 3px 3px 6px rgba(255,255,255,0.9), -1px -1px 4px rgba(0,0,0,0.1);
+  backface-visibility: hidden;
+  
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 12px;
+}
+.dot {
+  width: 13px; height: 13px; background-color: #1e293b; border-radius: 50%;
+  align-self: center; justify-self: center;
+  box-shadow: inset 0 3px 4px rgba(0,0,0,0.7), 0 1px 1px rgba(255,255,255,0.8);
+}
+
+/* Face Formats */
+.face-1 .dot { grid-area: 2 / 2; }
+.face-2 .dot:nth-child(1) { grid-area: 1 / 3; } .face-2 .dot:nth-child(2) { grid-area: 3 / 1; }
+.face-3 .dot:nth-child(1) { grid-area: 1 / 3; } .face-3 .dot:nth-child(2) { grid-area: 2 / 2; } .face-3 .dot:nth-child(3) { grid-area: 3 / 1; }
+.face-4 .dot:nth-child(1) { grid-area: 1 / 1; } .face-4 .dot:nth-child(2) { grid-area: 1 / 3; } .face-4 .dot:nth-child(3) { grid-area: 3 / 1; } .face-4 .dot:nth-child(4) { grid-area: 3 / 3; }
+.face-5 .dot:nth-child(1) { grid-area: 1 / 1; } .face-5 .dot:nth-child(2) { grid-area: 1 / 3; } .face-5 .dot:nth-child(3) { grid-area: 2 / 2; } .face-5 .dot:nth-child(4) { grid-area: 3 / 1; } .face-5 .dot:nth-child(5) { grid-area: 3 / 3; }
+.face-6 .dot:nth-child(1) { grid-area: 1 / 1; } .face-6 .dot:nth-child(2) { grid-area: 2 / 1; } .face-6 .dot:nth-child(3) { grid-area: 3 / 1; } .face-6 .dot:nth-child(4) { grid-area: 1 / 3; } .face-6 .dot:nth-child(5) { grid-area: 2 / 3; } .face-6 .dot:nth-child(6) { grid-area: 3 / 3; }
+
+/* Face positions */
+.dice-face.front  { transform: rotateY(0deg) translateZ(40px); }
+.dice-face.back   { transform: rotateY(180deg) translateZ(40px); }
+.dice-face.right  { transform: rotateY(90deg) translateZ(40px); }
+.dice-face.left   { transform: rotateY(-90deg) translateZ(40px); }
+.dice-face.top    { transform: rotateX(90deg) translateZ(40px); }
+.dice-face.bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+
+/* Audit Board Track */
+.board-track { 
+  background: var(--bg-panel); border-radius: var(--radius-md); padding: 20px; 
+  border: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; 
+}
+.track-cell { 
+  width: 52px; height: 52px; border-radius: var(--radius-sm); 
+  background: var(--bg-surface); border: 1px solid var(--border-color); 
+  display: flex; align-items: center; justify-content: center; font-size: 20px; position: relative; 
+  transition: opacity 0.3s ease; 
+}
+.track-cell .cell-num { position: absolute; top: 4px; left: 4px; font-size: 9px; color: var(--color-text-secondary); font-family: 'Inter', sans-serif; font-weight: 500; }
+.track-cell.t-start { border-color: var(--color-text-primary); border-width: 2px;}
+.track-cell.t-risk { border-bottom: 3px solid var(--status-risk); }
+.track-cell.t-opp { border-bottom: 3px solid var(--status-opp); }
+.track-cell.t-bonus { border-bottom: 3px solid var(--primary-blue); }
+.track-cell.t-boss { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--status-boss); }
+
+.player-token { 
+  position: absolute; font-size: 24px; z-index: 10; 
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.4)); transform: translateY(-4px);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Right Panel Modules */
+.right-panel { display: flex; flex-direction: column; gap: 16px; }
+.panel-box { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; }
+.panel-title { font-size: 12px; font-weight: 600; color: var(--color-text-secondary); margin-bottom: 14px; text-transform: uppercase; font-family: 'Inter', sans-serif; letter-spacing: 0.5px; }
+
+.cs-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.cs-avatar { width: 40px; height: 40px; border-radius: 8px; background: var(--bg-surface); display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1px solid var(--border-color); }
+.cs-name { font-size: 14px; font-weight: 600; color: var(--color-text-primary); }
+.cs-role { font-size: 12px; color: var(--color-text-secondary); }
+
+.item-chip { 
+  background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); 
+  padding: 6px 10px; font-size: 12px; color: var(--color-text-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin: 0 4px 4px 0; transition: background 0.2s;
+}
+.item-chip:hover { background: var(--border-focus); border-color: var(--color-text-secondary); }
+
+/* Activity Log */
+.log-panel { height: 160px; overflow-y: auto; font-size: 13px; color: var(--color-text-secondary); padding-right: 5px; }
+.log-panel::-webkit-scrollbar { width: 4px; }
+.log-panel::-webkit-scrollbar-thumb { background: var(--border-focus); border-radius: 4px; }
+.log-entry { padding: 8px 0; border-bottom: 1px solid var(--bg-surface); display: flex; gap: 8px; }
+.log-turn { font-family: 'Inter', sans-serif; font-weight: 600; color: var(--color-text-primary); min-width: 32px; }
+
+/* Domains Matrix Bar Chart */
+.domain-grid { display: flex; flex-direction: column; gap: 10px; }
+.dom-row { display: flex; align-items: center; gap: 12px; }
+.dom-row .dt-name { width: 40px; font-size: 11px; font-weight: 600; color: var(--color-text-primary); }
+.dom-row .dt-bar { flex: 1; height: 6px; background: var(--bg-surface); border-radius: 3px; position: relative; }
+.dom-row .dt-fill { height: 100%; border-radius: 3px; background: var(--color-text-secondary); transition: width 0.4s; }
+.dom-row .dt-lv { width: 24px; font-size: 11px; text-align: right; color: var(--color-text-secondary); font-family: 'Inter', sans-serif;}
+
+/* Modals */
+.overlay-wrap { 
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); 
+  display: flex; align-items: center; justify-content: center; z-index: 999; backdrop-filter: blur(4px); 
+}
+.card-modal { 
+  background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
+  padding: 30px; max-width: 440px; width: 90%; text-align: left; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); 
+  animation: modalEnter 0.2s cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+@keyframes modalEnter { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.card-icon { font-size: 28px; }
+.card-title { font-size: 18px; font-weight: 600; color: var(--color-text-primary); }
+.card-badge { display: inline-block; padding: 4px 10px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; border: 1px solid transparent; }
+.badge-risk { background: rgba(245, 158, 11, 0.1); color: var(--status-risk); border-color: rgba(245, 158, 11, 0.2); }
+.badge-opp { background: rgba(16, 185, 129, 0.1); color: var(--status-opp); border-color: rgba(16, 185, 129, 0.2); }
+
+.card-desc { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 24px; }
+.choice-list { display: flex; flex-direction: column; gap: 10px; }
+
+/* Boss Modal specifically */
+.boss-modal { text-align: center; border: 2px solid var(--status-boss); position: relative; overflow: hidden; }
+.boss-modal::before { content: ''; position: absolute; top:0; left:0; right:0; height:4px; background: var(--status-boss); }
+
+/* Buttons */
+.btn-game { 
+  background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); 
+  padding: 10px 16px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--color-text-primary); 
+  transition: all 0.2s; font-family: 'Inter', 'Prompt', sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-game:hover:not(:disabled) { background: var(--border-focus); border-color: var(--color-text-secondary); }
+.btn-game:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary-game { background: var(--primary-blue); border: 1px solid var(--primary-blue-hover); font-weight: 600; }
+.btn-primary-game:hover:not(:disabled) { background: var(--primary-blue-hover); border-color: #1d4ed8; }
+
+.btn-boss { background: var(--status-boss); color: #fff; border: none; width: 100%; font-size: 15px; padding: 14px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.btn-boss:hover { opacity: 0.9; }
+
+.choice-btn { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px; color: var(--color-text-primary); text-align: left; cursor: pointer; transition: border-color 0.15s; font-size: 14px; }
+.choice-btn:hover { border-color: var(--primary-blue); background: rgba(59, 130, 246, 0.05); }
+.choice-label { display: block; font-size: 12px; color: var(--color-text-secondary); margin-top: 6px; }
+
+/* Effect Chips (For Results) */
+.effect-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.ec { font-size: 12px; padding: 6px 12px; border-radius: var(--radius-sm); font-weight: 500; font-family: 'Inter', sans-serif; border: 1px solid transparent; }
+.ec-pos { background: rgba(16, 185, 129, 0.1); color: var(--status-opp); border-color: rgba(16, 185, 129, 0.2); }
+.ec-neg { background: rgba(245, 158, 11, 0.1); color: var(--status-risk); border-color: rgba(245, 158, 11, 0.2); }
+.ec-neutral { background: var(--bg-surface); color: var(--color-text-secondary); border-color: var(--border-color); }
+
+/* Toast Notification */
+.toast { 
+  position: fixed; top: 24px; left: 50%; transform: translateX(-50%); 
+  background: var(--color-text-primary); color: var(--bg-dark); 
+  border-radius: var(--radius-sm); padding: 12px 24px; font-size: 14px; font-weight: 500; 
+  z-index: 1000; pointer-events: none; transition: opacity 0.3s, transform 0.3s; 
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); opacity: 0; transform: translate(-50%, -10px);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* End Screen */
+.end-hero { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 600px; margin: 0 auto; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 40px; }
+.end-grade { font-size: 64px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div class="game-wrap" id="gw">
+  <div id="screen-start" class="screen active">
+    <!-- Formal Dashboard Hero -->
+    <div class="hero-banner">
+      <div class="hero-icon">📊</div>
+      <div class="hero-title">COBIT Framework: Enterprise Audit</div>
+      <div class="hero-sub">แพลตฟอร์มจำลองประเมินการบริหารจัดการ IT ระดับองค์กร</div>
+    </div>
+    
+    <div class="rules-box">
+      <h3>📋 ระเบียบและพารามิเตอร์การประเมิน</h3>
+      <ul>
+        <li><b>การประเมินสถานะ:</b> หาก <b>Trust หรือ Budget ลดเหลือ 0</b> จะถือว่าระบบล้มเหลว (Project Terminated)</li>
+        <li><b>เกณฑ์เข้าประชุมบอร์ดผู้บริหาร (Board Meeting - ช่อง 24):</b> ต้องมีองค์ประกอบ Trust > 20 และ Budget > 20</li>
+        <li><b>การป้องกัน Audit (เกณฑ์ผ่าน > 35 แต้ม):</b> แต้มทอย 2 ลูก + <b>(ระดับผลรวม Maturity x 2)</b> ข้ามเส้นมาตรฐาน</li>
+        <li><i>Security Bonus:</i> ถ้าระบบป้องกัน (Risk Buffer) > 50 จะได้คะแนนสมทบการตรวจสอบ (Compliance) อีก +5</li>
+      </ul>
+    </div>
+
+    <!-- Replace User's grid with smaller card grid matching the style -->
+    <div style="font-size:14px; font-weight:600; color:var(--color-text-secondary); margin-bottom:12px; font-family:'Inter',sans-serif; letter-spacing:0.5px;">SELECT EXECUTIVE PROFILE</div>
+    <div class="char-grid" id="char-grid"></div>
+    
+    <div style="text-align:right;">
+      <button class="btn-game btn-primary-game" style="font-size:15px; padding:12px 30px;" onclick="startGame()">▶ Initialize System</button>
+    </div>
+  </div>
+
+  <div id="screen-game" class="screen">
+    <div class="game-header">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span class="header-title">Audit Progression</span>
+        <span class="turn-badge" id="turn-badge">Iteration 1</span>
+      </div>
+      <button class="btn-game" onclick="showHelp()">ⓘ System Directive</button>
+    </div>
+
+    <div class="main-layout">
+      <!-- Left Area (Board & Dice) -->
+      <div class="center-board">
+        <div class="stats-row" id="stats-row"></div>
+        
+        <div class="dice-panel">
+          <div class="dice-panel-title">Evaluation Engine (Randomizer)</div>
+          
+          <!-- 3D Poly Dice Object -->
+          <div class="dice-scene">
+            <div class="dice-cube" id="dice1">
+              <div class="dice-face front face-1"><div class="dot"></div></div>
+              <div class="dice-face back face-6"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <div class="dice-face right face-3"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <div class="dice-face left face-4"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <div class="dice-face top face-2"><div class="dot"></div><div class="dot"></div></div>
+              <div class="dice-face bottom face-5"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            </div>
+          </div>
+          
+          <button class="btn-game btn-primary-game" id="btn-roll" onclick="rollDice()" style="width: 220px;">🎲 Execute Evaluation Run</button>
+        </div>
+
+        <div class="board-track" id="board-track"></div>
+      </div>
+
+      <!-- Right Area (Panels) -->
+      <div class="right-panel">
+        <div class="panel-box">
+          <div class="panel-title">Active Executive Profile</div>
+          <div class="cs-header" id="char-status-panel"></div>
+          <div id="ability-btn-container"></div>
+        </div>
+
+        <div class="panel-box">
+          <div class="panel-title">Maturity Metrics (Level 1-5)</div>
+          <div class="domain-grid" id="domain-board"></div>
+        </div>
+
+        <div class="panel-box" id="items-panel" style="display:none">
+          <div class="panel-title">Available Resources</div>
+          <div id="items-container"></div>
+        </div>
+
+        <div class="panel-box" style="flex: 1; min-height:220px;">
+          <div class="panel-title">System Activity Log</div>
+          <div class="log-panel" id="log-panel"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-end" class="screen">
+    <div class="end-hero" id="end-content"></div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <div id="modal-container"></div>
+</div>
+
+<script>
+// ==========================================
+// GAME DATA & CONFIGURATION
+// ==========================================
+const CHARS = [
+  {id:'cio',name:'Dr. วิชัย',title:'Chief Information Officer',avatar:'👔', bonus:'EDM',bonusDesc:'EDM +1 อัตโนมัติ',ability:'Executive Override',abilityDesc:'เพิ่ม Trust +15 (1 ครั้ง)',passive:'Trust เริ่ม 60',startBonus:{trust:10},abilityUsed:false},
+  {id:'risk',name:'นางสาว สุภา',title:'Risk Manager',avatar:'🛡️', bonus:'APO',bonusDesc:'APO +1 อัตโนมัติ',ability:'Crisis Shield',abilityDesc:'เพิ่ม Risk +25 (1 ครั้ง)',passive:'Risk เริ่ม 65',startBonus:{risk:15},abilityUsed:false},
+  {id:'dev',name:'นาย ธนกร',title:'Lead Developer',avatar:'💻', bonus:'BAI',bonusDesc:'BAI +1 อัตโนมัติ',ability:'Rapid Deploy',abilityDesc:'ลด Budget ลบ (Passive)',passive:'Budget เริ่ม 120',startBonus:{budget:20},abilityUsed:false},
+  {id:'auditor',name:'นาง มาลี',title:'Internal Auditor',avatar:'📋', bonus:'MEA',bonusDesc:'MEA +1 อัตโนมัติ',ability:'Emergency Fund',abilityDesc:'เพิ่ม Budget 20 (1 ครั้ง)',passive:'Maturity เริ่ม Lv.2',startBonus:{maturity:1},abilityUsed:false}
+];
+
+const DOMAINS_DEF = [
+  {id:'EDM',name:'EDM',icon:'🏛️',color:'#eab308'}, 
+  {id:'APO',name:'APO',icon:'📐',color:'#a855f7'},
+  {id:'BAI',name:'BAI',icon:'🔧',color:'#14b8a6'}, 
+  {id:'DSS',name:'DSS',icon:'⚙️',color:'#3b82f6'},
+  {id:'MEA',name:'MEA',icon:'📊',color:'#f43f5e'}
+];
+
+const ITEMS = [
+  {id:'budget_pack',name:'กองทุนด่วน',desc:'Budget +20',uses:1,effect:{budget:20}, icon:'💰'},
+  {id:'trust_boost',name:'PR Event',desc:'Trust +15',uses:1,effect:{trust:15}, icon:'🤝'},
+  {id:'risk_barrier',name:'Firewall',desc:'Risk Buffer +20',uses:1,effect:{risk:20}, icon:'🛡️'},
+  {id:'mat_boost',name:'System Upgrade',desc:'Maturity +1 ทุกโดเมน',uses:1,effect:{maturity:{EDM:1,APO:1,BAI:1,DSS:1,MEA:1}}, icon:'✨'}
+];
+
+const EVENTS = {
+  risk: [
+    {title:'ระบบ ERP ขัดข้อง',desc:'ระบบหลักขององค์กรไม่สามารถทำงานได้ กระทบ 40 แผนก',domain:'DSS', choices:[{text:'เปิด War Room แก้ปัญหาส่วนกลาง',effect:{budget:-10,risk:-15,maturity:{DSS:1}},label:'(+DSS Maturity)'},{text:'ให้ IT ซ่อมเงียบๆ ไม่รายงานทันที',effect:{trust:-15,risk:-10},label:'เสีย Trust หนัก'}]},
+    {title:'Data Breach Alert!',desc:'พบการรั่วไหลของข้อมูลลูกค้า',domain:'DSS', choices:[{text:'แจ้ง Regulator และเร่งดำเนินการแก้ไข',effect:{trust:-5,budget:-20,risk:-20,maturity:{MEA:1}},label:'โปร่งใส (+MEA)'},{text:'ปิดข่าวไว้ก่อน',effect:{trust:-25,budget:-10,risk:-10},label:'ผิด Compliance'}]},
+    {title:'Ransomware Attack',desc:'พบการพยายามเข้ารหัสไฟล์เซิร์ฟเวอร์',domain:'APO', choices:[{text:'ใช้แผน DRP ตัดการเชื่อมต่อและกู้คืน',effect:{budget:-25,risk:-20,maturity:{APO:1}},label:'ปลอดภัย (+APO)'},{text:'ยอมจ่ายค่าไถ่เพื่อประหยัดเวลา',effect:{trust:-20,budget:-40,risk:-10},label:'ไม่แนะนำ'}]}
+  ],
+  opp: [
+    {title:'Cloud Migration Project',desc:'พิจารณาย้ายข้อมูลขึ้นระบบคลาวด์',domain:'BAI', choices:[{text:'ทำขั้นตอน ROI และ Assess ก่อน',effect:{trust:+5,budget:+5,risk:+5,maturity:{BAI:1}},label:'รอบคอบ (+BAI)'},{text:'อนุมัติย้ายด่วนเพื่อลดต้นทุน Server',effect:{trust:-5,budget:+15,risk:-15},label:'เสี่ยงด้าน Security'}]},
+    {title:'ฝึกอบรมด้าน COBIT',desc:'พนักงานเสนอให้มีการประเมินภายใน',domain:'EDM', choices:[{text:'อัดฉีดงบจัดเทรนนิ่งให้พนักงาน',effect:{trust:+10,budget:-15,risk:+10,maturity:{EDM:1}},label:'ผลดีระยะยาว (+EDM)'},{text:'ปฏิเสธโครงการ',effect:{budget:0,risk:-5},label:'ประหยัด Budget'}]},
+    {title:'จ้าง External Audit ล่วงหน้า',desc:'เตรียมความพร้อมก่อนของจริงจะมา',domain:'MEA', choices:[{text:'ให้เข้ามาตรวจสอบระบบเต็มพิกัด',effect:{trust:+15,budget:-15,risk:+10,maturity:{MEA:1}},label:'ยกระดับ (+MEA)'},{text:'ประวิงเวลาไปก่อน',effect:{trust:-10,budget:0,risk:-10},label:'เก็บ Budget ไว้รบบอส'}]}
+  ]
+};
+
+const BOARD_TRACK = [
+  {type:'start', icon:'🏁'},
+  {type:'safe', icon:'✅'}, {type:'risk', icon:'⚠️'}, {type:'opp', icon:'💡'}, {type:'safe', icon:'✅'},
+  {type:'bonus', icon:'➕'}, {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'},
+  {type:'safe', icon:'✅'}, {type:'risk', icon:'⚠️'}, {type:'bonus', icon:'➕'}, {type:'opp', icon:'💡'},
+  {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'},
+  {type:'safe', icon:'✅'}, {type:'bonus', icon:'➕'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'},
+  {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'}, {type:'boss', icon:'📊'}
+];
+
+// ==========================================
+// GAME STATE
+// ==========================================
+let G = {};
+let diceRotX = 0;
+let diceRotY = 0;
+
+function initGame(charId){
+  const ch = CHARS.find(c=>c.id===charId);
+  G = {
+    turn: 1, position: 0, maxPos: BOARD_TRACK.length - 1,
+    trust: 50, budget: 100, risk: 50,
+    maturity: {EDM:1, APO:1, BAI:1, DSS:1, MEA:1},
+    log: [], char: JSON.parse(JSON.stringify(ch)),
+    items: JSON.parse(JSON.stringify(ITEMS)),
+    isRolling: false, waitingChoice: false
+  };
+  
+  if(G.char.startBonus.trust) G.trust += G.char.startBonus.trust;
+  if(G.char.startBonus.budget) G.budget += G.char.startBonus.budget;
+  if(G.char.startBonus.risk) G.risk += G.char.startBonus.risk;
+  if(G.char.startBonus.maturity) DOMAINS_DEF.forEach(d=>G.maturity[d.id]=2);
+  
+  addLog('System Initialized: ควบคุมตัวแปร Trust และ Budget ให้อยู่ในระดับปลอดภัย');
+}
+
+// ==========================================
+// RENDERING FUNCTIONS
+// ==========================================
+function renderStart(){
+  document.getElementById('char-grid').innerHTML = CHARS.map(c=>`
+    <div class="char-card ${G.selectedChar===c.id?'selected':''}" onclick="selectChar('${c.id}')" id="cc-${c.id}">
+      <span class="char-avatar">${c.avatar}</span>
+      <div class="char-name">${c.name}</div>
+      <div class="char-title">${c.title}</div>
+      <span class="char-bonus">${c.bonusDesc}</span>
+    </div>`).join('');
+}
+
+function selectChar(id){
+  G.selectedChar = id;
+  document.querySelectorAll('.char-card').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('cc-'+id)?.classList.add('selected');
+}
+
+function startGame(){
+  if(!G.selectedChar) G.selectedChar = 'cio';
+  initGame(G.selectedChar);
+  document.getElementById('screen-start').classList.remove('active');
+  document.getElementById('screen-game').classList.add('active');
+  
+  // Reset Dice Transform implicitly
+  diceRotX = -15; diceRotY = 15;
+  document.getElementById('dice1').style.transform = `rotateX(${diceRotX}deg) rotateY(${diceRotY}deg)`;
+  
+  renderAll();
+}
+
+function renderAll(){
+  renderStats(); renderBoard(); renderRightPanel();
+}
+
+function renderStats(){
+  document.getElementById('turn-badge').textContent = `Iteration ${G.turn}`;
+  const mTotal = Object.values(G.maturity).reduce((a,b)=>a+b,0);
+  
+  const drawStat = (label, val, icon, dangerThresh = 20) => {
+    let colorClass = val <= dangerThresh ? 'var(--status-boss)' : 'var(--color-text-primary)';
+    return `
+      <div class="stat-box">
+        <div class="stat-header">
+          <span class="stat-lbl">${label}</span>
+          <span class="stat-icon">${icon}</span>
+        </div>
+        <div class="stat-num" style="color:${colorClass}">${val}</div>
+      </div>
+    `;
+  };
+
+  document.getElementById('stats-row').innerHTML = `
+    ${drawStat('Trust Index', G.trust, '🤝')}
+    ${drawStat('Budget', G.budget, '💰')}
+    ${drawStat('Risk Buffer', G.risk, '🛡️')}
+    ${drawStat('Maturity Σ', mTotal, '✨', 0)}
+  `;
+}
+
+function renderBoard(){
+  document.getElementById('board-track').innerHTML = BOARD_TRACK.map((t, i) => {
+    let cls = `track-cell t-${t.type}`;
+    let token = i === G.position ? `<div class="player-token">${G.char.avatar}</div>` : '';
+    if(i < G.position) cls += ' passed';
+    
+    // Invert opacity logic to formal dashboard styling -> gray out passed cells
+    return `<div class="${cls}" style="${i<G.position?'opacity:0.3; background:transparent;':''}"><span class="cell-num">${i===G.maxPos?'EVAL':i||'INIT'}</span>${t.icon}${token}</div>`;
+  }).join('');
+}
+
+function renderRightPanel(){
+  document.getElementById('char-status-panel').innerHTML = `
+    <div class="cs-avatar">${G.char.avatar}</div>
+    <div><div class="cs-name">${G.char.name}</div><div class="cs-role">${G.char.title}</div></div>
+  `;
+  
+  const abBtn = document.getElementById('ability-btn-container');
+  if(!G.char.abilityUsed && G.char.id !== 'dev') {
+    abBtn.innerHTML = `<button class="btn-game btn-primary-game" style="width:100%; text-align:center;" onclick="useAbility()">⚡ ใช้สกิล: ${G.char.ability}</button>`;
+  } else if (G.char.id === 'dev') {
+    abBtn.innerHTML = `<button class="btn-game" style="width:100%; cursor:default;" disabled>⚡ เสริมประสิทธิภาพ (Passive)</button>`;
+  } else {
+    abBtn.innerHTML = `<button class="btn-game" style="width:100%; cursor:default; border-style:dashed;" disabled>⚡ สกิลหมดความพร้อม</button>`;
+  }
+
+  // Horizontal bar matrix instead of tiles
+  document.getElementById('domain-board').innerHTML = DOMAINS_DEF.map(d=>`
+    <div class="dom-row">
+      <div class="dt-name" style="color:${d.color}">${d.name}</div>
+      <div class="dt-bar"><div class="dt-fill" style="width:${(G.maturity[d.id]/5)*100}%; background-color:${d.color}"></div></div>
+      <div class="dt-lv">Lv.${G.maturity[d.id]}</div>
+    </div>
+  `).join('');
+
+  const items = G.items.filter(i=>i.owned);
+  document.getElementById('items-panel').style.display = items.length ? 'block' : 'none';
+  document.getElementById('items-container').innerHTML = items.map(i=>`<span class="item-chip" onclick="useItem('${i.id}')" title="${i.desc}">${i.icon} ${i.name}</span>`).join('');
+
+  document.getElementById('log-panel').innerHTML = G.log.map(l=>`
+    <div class="log-entry">
+      <div class="log-turn">T${l.turn}</div>
+      <div>${l.msg}</div>
+    </div>
+  `).join('');
+}
+
+// ==========================================
+// 3D DICE MECHANICS
+// ==========================================
+function rollDice() {
+  if(G.isRolling || G.waitingChoice) return;
+  G.isRolling = true; 
+  document.getElementById('btn-roll').disabled = true;
+  
+  const dEl = document.getElementById('dice1');
+  const roll = Math.floor(Math.random() * 6) + 1;
+  
+  // Add 3-4 random full keyframe rotations onto existing state
+  diceRotX += (Math.floor(Math.random() * 2) + 2) * 360;
+  diceRotY += (Math.floor(Math.random() * 2) + 2) * 360;
+  
+  // Align to face
+  let faceRotX = 0, faceRotY = 0;
+  if (roll === 1) { faceRotX = 0; faceRotY = 0; } // Front ⚀
+  else if (roll === 2) { faceRotX = -90; faceRotY = 0; } // Top ⚁
+  else if (roll === 3) { faceRotX = 0; faceRotY = -90; } // Right ⚂
+  else if (roll === 4) { faceRotX = 0; faceRotY = 90; } // Left ⚃
+  else if (roll === 5) { faceRotX = 90; faceRotY = 0; } // Bottom ⚄
+  else if (roll === 6) { faceRotX = 0; faceRotY = -180; } // Back ⚅
+  
+  // Apply the 3D Rotation Transition
+  dEl.style.transform = `rotateX(${diceRotX + faceRotX}deg) rotateY(${diceRotY + faceRotY}deg)`;
+  
+  // Wait for the CSS transition of transform to finish (1.2s)
+  setTimeout(() => {
+    addLog(`สุ่มได้ประเมินรหัส ${roll}`);
+    movePlayer(roll);
+  }, 1250); 
+}
+
+function movePlayer(steps) {
+  let c = 0;
+  let moveInt = setInterval(() => {
+    if(c < steps && G.position < G.maxPos) { 
+      G.position++; c++; renderBoard(); 
+    } else { 
+      clearInterval(moveInt); 
+      setTimeout(() => processTile(G.position), 300); 
+    }
+  }, 250);
+}
+
+function processTile(pos) {
+  G.turn++; 
+  G.isRolling = false;
+  
+  if(pos === G.maxPos) { startBossBattle(); return; } 
+  
+  const t = BOARD_TRACK[pos];
+  if(t.type === 'bonus') { 
+    giveItem(); addLog('พบ Resource พิเศษ! ดึงแอตทริบิวต์เข้า Inventory'); 
+    document.getElementById('btn-roll').disabled = false;
+    checkEnd(); 
+  }
+  else if(t.type === 'safe') {
+    addLog('ดำเนินการใน Safe Scope ปกติ ไม่มีข้อบ่งชี้ความเสี่ยง');
+    document.getElementById('btn-roll').disabled = false;
+    checkEnd();
+  }
+  else if(t.type === 'risk' || t.type === 'opp') {
+    drawCard(t.type);
+  } else {
+    document.getElementById('btn-roll').disabled = false;
+    checkEnd();
+  }
+}
+
+function drawCard(type) {
+  G.waitingChoice = true; 
+  document.getElementById('btn-roll').disabled = true;
+  
+  const pool = EVENTS[type];
+  const ev = pool[Math.floor(Math.random() * pool.length)];
+  G.currentEvent = ev;
+
+  const badge = type==='risk' ? `<div class="card-badge badge-risk">Critical Risk Scenario</div>` : `<div class="card-badge badge-opp">Strategic Opportunity</div>`;
+  const iconHtml = type==='risk' ? '⚠️' : '💡';
+
+  document.getElementById('modal-container').innerHTML = `
+    <div class="overlay-wrap"><div class="card-modal">
+      <div class="card-header">
+        <div class="card-icon">${iconHtml}</div>
+        <div>${badge}<div class="card-title">${ev.title}</div></div>
+      </div>
+      <div class="card-desc">${ev.desc}</div>
+      <div style="font-size:12px; font-weight:600; color:var(--color-text-primary); margin-bottom:10px;">Select Response Protocol:</div>
+      <div class="choice-list">
+        ${ev.choices.map((c,i)=>`<button class="choice-btn" onclick="makeChoice(${i})">${c.text}<span class="choice-label">${c.label}</span></button>`).join('')}
+      </div>
+    </div></div>`;
+}
+
+function makeChoice(idx) {
+  const choice = G.currentEvent.choices[idx];
+  const eff = choice.effect;
+  applyEffect(eff);
+  
+  let chips = [];
+  let bChange = eff.budget || 0;
+  if (G.char.id === 'dev' && bChange < 0) bChange = Math.round(bChange * 0.85);
+
+  if(eff.trust) chips.push(`<span class="ec ${eff.trust>0?'ec-pos':'ec-neg'}">Trust ${eff.trust>0?'+':''}${eff.trust}</span>`);
+  if(bChange) chips.push(`<span class="ec ${bChange>0?'ec-pos':'ec-neg'}">Budget ${bChange>0?'+':''}${bChange}</span>`);
+  if(eff.risk) chips.push(`<span class="ec ${eff.risk>0?'ec-pos':'ec-neg'}">Risk ${eff.risk>0?'+':''}${eff.risk}</span>`);
+  
+  if(eff.maturity) {
+    Object.keys(eff.maturity).forEach(d => {
+      let add = eff.maturity[d];
+      if(G.char.bonus === d && add > 0) add++;
+      chips.push(`<span class="ec ec-pos">${d} +${add}</span>`);
+    });
+  }
+
+  if (chips.length === 0) chips.push(`<span class="ec ec-neutral">ไม่มีผลกระทบ</span>`);
+
+  document.getElementById('modal-container').innerHTML = `
+    <div class="overlay-wrap">
+      <div class="card-modal">
+        <div class="card-header">
+          <div class="card-icon">📊</div>
+          <div>
+            <div class="card-badge" style="background:#334155;">System Metrics Update</div>
+            <div class="card-title">สรุปผลลัพธ์การตัดสินใจ</div>
+          </div>
+        </div>
+        <div class="card-desc" style="margin-bottom:10px;">คุณได้ดำเนินการแผน:<br><b style="color:var(--color-text-primary);">${choice.text}</b></div>
+        <div class="effect-chips" style="padding: 10px 0;">
+          ${chips.join('')}
+        </div>
+        <div style="text-align:right;">
+          <button class="btn-game btn-primary-game" onclick="closeResultModal()">ดำเนินการต่อ</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function closeResultModal() {
+  document.getElementById('modal-container').innerHTML = '';
+  G.waitingChoice = false; 
+  document.getElementById('btn-roll').disabled = false;
+  renderAll(); 
+  checkEnd();
+}
+
+function applyEffect(eff) {
+  if(!eff) return;
+  let bChange = eff.budget || 0;
+  if(G.char.id === 'dev' && bChange < 0) bChange = Math.round(bChange * 0.85); 
+  
+  G.trust = Math.max(0, Math.min(100, G.trust + (eff.trust||0)));
+  G.budget = Math.max(0, Math.min(200, G.budget + bChange));
+  G.risk = Math.max(0, Math.min(100, G.risk + (eff.risk||0)));
+  
+  if(eff.maturity) {
+    Object.entries(eff.maturity).forEach(([d,v]) => {
+      let add = v; 
+      if(G.char.bonus === d && v > 0) add++; 
+      G.maturity[d] = Math.max(1, Math.min(5, G.maturity[d] + add));
+    });
+  }
+}
+
+function giveItem() {
+  const unowned = G.items.filter(i => !i.owned);
+  if(unowned.length > 0) { 
+    unowned[Math.floor(Math.random() * unowned.length)].owned = true; 
+    renderRightPanel(); 
+    showToast('ได้รับไอเทมช่วยเหลือ!'); 
+  }
+}
+
+function useItem(id) {
+  const item = G.items.find(x => x.id === id);
+  if(item && item.owned) { 
+    applyEffect(item.effect); 
+    item.owned = false; 
+    showToast(`ใช้งาน ${item.name} สำเร็จ!`); 
+    addLog(`System Override: ใช้งาน ${item.name}`);
+    renderAll(); 
+    checkEnd(); 
+  }
+}
+
+function useAbility() {
+  if(!G.char.abilityUsed) {
+    G.char.abilityUsed = true;
+    if(G.char.id==='cio') { applyEffect({trust: 15}); showToast('Executive Override Activated: Trust +15'); }
+    if(G.char.id==='risk') { applyEffect({risk: 25}); showToast('Crisis Shield Deployed: Risk +25'); }
+    if(G.char.id==='auditor') { applyEffect({budget: 20}); showToast('Emergency Fund Approved: Budget +20'); }
+    renderAll(); 
+  }
+}
+
+function checkEnd() {
+  if(G.trust <= 0) endGame('lose_trust');
+  else if(G.budget <= 0) endGame('lose_budget');
+}
+
+// ==========================================
+// BOSS BATTLE MECHANICS
+// ==========================================
+function startBossBattle() {
+  G.waitingChoice = true; 
+  document.getElementById('btn-roll').disabled = true;
+  
+  if(G.trust <= 20 || G.budget <= 20) {
+    document.getElementById('modal-container').innerHTML = `
+      <div class="overlay-wrap"><div class="card-modal boss-modal">
+        <div style="font-size:42px; margin-bottom:12px;">📉</div>
+        <div class="card-title" style="color:var(--status-boss); margin-bottom:8px;">Evaluation Terminated</div>
+        <div class="card-desc" style="color:var(--color-text-primary);">
+          พารามิเตอร์ Trust และ Budget ประเมินผลแล้วไม่อยู่ในเกณฑ์มาตรฐานของบอร์ดบริหาร (ต้องมีมากกว่า 20)<br><br>
+          <span style="color:var(--color-text-secondary)">โครงการและบทบาทหน้าที่ของคุณถูกระงับทันที</span>
+        </div>
+        <button class="btn-game" style="width:100%;" onclick="endGame('lose_fired')">Acknowledge</button>
+      </div></div>`;
+    return;
+  }
+
+  const mTotal = Object.values(G.maturity).reduce((a,b)=>a+b,0);
+  const mPower = mTotal * 2;
+  const riskBonus = G.risk > 50 ? 5 : 0;
+  
+  G.bossSetup = { hp: 35, mPower, riskBonus };
+
+  document.getElementById('modal-container').innerHTML = `
+    <div class="overlay-wrap"><div class="card-modal boss-modal">
+      <div style="font-size:48px; margin-bottom:10px; text-align:center;">🕵️</div>
+      <div class="card-title" style="text-align:center; margin-bottom:4px;">The Ultimate External Audit</div>
+      <div style="text-align:center; color:var(--color-text-secondary); font-size:13px; margin-bottom:20px;">การตรวจสอบใหญ่ประจำปีเริ่มต้นขึ้นแล้ว!</div>
+      
+      <div style="background:var(--bg-dark); padding:16px; border-radius:var(--radius-md); margin-bottom:24px; font-size:14px; border: 1px solid var(--border-color);">
+        <div style="color:var(--status-boss); font-weight:600; text-align:center; margin-bottom:12px; text-transform:uppercase;">เกณฑ์มาตรฐานที่ต้องผ่าน (Target): 35</div>
+        <div style="color:var(--primary-blue); font-weight:500; margin-bottom:8px;">ประเมินระบบป้องกันอัตโนมัติ:</div>
+        <div style="margin-bottom:4px; display:flex; justify-content:space-between;"><span>Maturity Levels (${mTotal}) x2</span> <span style="color:var(--status-opp); font-weight:600;">+${mPower}</span></div>
+        <div style="margin-bottom:4px; display:flex; justify-content:space-between;"><span>Risk Buffer Bonus (>50)</span> <span style="color:var(--status-opp); font-weight:600;">+${riskBonus}</span></div>
+        <div style="margin-top:12px; border-top:1px dashed var(--border-focus); padding-top:12px; display:flex; justify-content:space-between;">
+          <span style="color:var(--status-risk); font-weight:500;">Random Execution (Roll 2 Dice)</span> <span>🎲 ?</span>
+        </div>
+      </div>
+
+      <button class="btn-boss" onclick="rollForBoss()">Execute Defense Protocols 🎲🎲</button>
+    </div></div>`;
+}
+
+function rollForBoss() {
+  const d1 = Math.floor(Math.random() * 6) + 1;
+  const d2 = Math.floor(Math.random() * 6) + 1;
+  const diceTotal = d1 + d2;
+  
+  const { hp, mPower, riskBonus } = G.bossSetup;
+  const totalPlayerPower = diceTotal + mPower + riskBonus;
+  const isWin = totalPlayerPower >= hp;
+  
+  document.getElementById('modal-container').innerHTML = `
+    <div class="overlay-wrap"><div class="card-modal" style="${isWin?'border-color:var(--status-opp)':'border-color:var(--status-boss)'}">
+      <div style="font-size:42px; margin-bottom:12px; text-align:center;">📊</div>
+      <div class="card-title" style="text-align:center; margin-bottom:12px;">Audit Result: ${isWin?'Passed':'Failed'}</div>
+      
+      <div style="font-size:16px; margin-bottom:16px; text-align:center; color:var(--color-text-secondary);">
+        Random Variance: ${d1} + ${d2} <b style="color:var(--color-text-primary);">= ${diceTotal}</b>
+      </div>
+
+      <div style="font-size:15px; margin-bottom:24px; background:var(--bg-surface); padding:16px; border-radius:var(--radius-md); text-align:center;">
+        คะแนนประเมินรวมสุทธิ = <br>
+        <span style="font-size:32px; font-weight:700; color:${isWin?'var(--status-opp)':'var(--status-boss)'}; font-family:'Inter',sans-serif;">${totalPlayerPower}</span><br>
+        <span style="font-size:12px; color:var(--color-text-secondary);">(Target Threshold: ${hp})</span>
+      </div>
+
+      <button class="btn-boss" style="${isWin?'background:var(--status-opp);':'background:var(--status-boss);'}" 
+        onclick="endGame('${isWin ? 'win_boss' : 'lose_boss'}')">
+        ${isWin ? 'Acknowledge Success 🏆' : 'Acknowledge Failure 💀'}
+      </button>
+    </div></div>`;
+}
+
+// ==========================================
+// END GAME & UTILITIES
+// ==========================================
+function endGame(res) {
+  document.getElementById('modal-container').innerHTML = '';
+  document.getElementById('screen-game').classList.remove('active');
+  document.getElementById('screen-end').classList.add('active');
+  
+  let title = '', sub = '', icon = '', color = '';
+  
+  if(res === 'lose_trust') { title='Project Aborted'; sub='คุณถูกถอดถอนจากความน่าเชื่อถือที่หมดลง (Trust = 0)'; icon='👎'; color='var(--status-boss)'; }
+  else if(res === 'lose_budget') { title='Fund Depleted'; sub='ทรัพยากรการเงินหมดเกลี้ยง โครงการไปต่อไม่ได้'; icon='💸'; color='var(--status-boss)'; }
+  else if(res === 'lose_fired') { title='Terminated'; sub='พารามิเตอร์องค์กร (Trust/Budget) ต่ำกว่าเกณฑ์มาตรฐาน'; icon='📉'; color='var(--status-boss)'; }
+  else if(res === 'lose_boss') { title='Audit Failed'; sub='พบช่องโหว่การตรวจสอบจาก External Audit สรุปผลล้มเหลว'; icon='🚨'; color='var(--status-boss)'; }
+  else if(res === 'win_boss') { title='Compliance Achieved'; sub='การตรวจสอบไร้รอยต่อ องค์กรผ่านเกณฑ์ COBIT อย่างสมบูรณ์'; icon='🏆'; color='var(--status-opp)'; }
+
+  document.getElementById('end-content').innerHTML = `
+    <div class="end-grade">${icon}</div>
+    <div style="font-size:28px; font-weight:700; margin-bottom:12px; color:${color}; font-family:'Inter',sans-serif; letter-spacing:0.5px;">${title}</div>
+    <div style="color:var(--color-text-secondary); margin-bottom:32px; font-size:15px; line-height:1.6;">${sub}</div>
+    
+    <div style="display:flex; justify-content:center; gap:16px; margin-bottom: 40px; flex-wrap:wrap;">
+      <div class="stat-box" style="width:130px; text-align:center;">
+        <div style="font-size:24px; font-weight:600; color:var(--color-text-primary); font-family:'Inter'">${G.trust}</div><div style="font-size:11px; color:var(--color-text-secondary); margin-top:4px; text-transform:uppercase;">Trust Index</div>
+      </div>
+      <div class="stat-box" style="width:130px; text-align:center;">
+        <div style="font-size:24px; font-weight:600; font-family:'Inter'">${G.budget}</div><div style="font-size:11px; color:var(--color-text-secondary); margin-top:4px; text-transform:uppercase;">Budget</div>
+      </div>
+      <div class="stat-box" style="width:130px; text-align:center;">
+        <div style="font-size:24px; font-weight:600; color:var(--status-opp); font-family:'Inter'">${Object.values(G.maturity).reduce((a,b)=>a+b,0)}</div><div style="font-size:11px; color:var(--color-text-secondary); margin-top:4px; text-transform:uppercase;">Maturity Σ</div>
+      </div>
+    </div>
+    
+    <button class="btn-game btn-primary-game" style="font-size:15px; padding:12px 30px;" onclick="resetToStart()">Initiate New Assessment 🔄</button>
+  `;
+}
+
+function resetToStart() {
+  G = {}; 
+  document.getElementById('screen-end').classList.remove('active');
+  document.getElementById('screen-start').classList.add('active');
+  renderStart();
+}
+
+function addLog(msg) {
+  G.log.unshift({turn: G.turn, msg});
+  if(G.log.length > 20) G.log.pop();
+  if(document.getElementById('log-panel')) renderRightPanel();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast'); 
+  t.textContent = msg; 
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function showHelp() { 
+  showToast('Directive: Maximize Maturity & keep Trust/Budget > 20 before the Audit stage.'); 
+}
+
+renderStart();
+</script>
+</body>
+</html>

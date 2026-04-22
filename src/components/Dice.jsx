@@ -1,8 +1,9 @@
 import React, { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
 
 const Dice = forwardRef(({ onRollComplete, rollDisabled }, ref) => {
-  const [diceRotX, setDiceRotX] = useState(-15);
-  const [diceRotY, setDiceRotY] = useState(15);
+  const [diceRotX, setDiceRotX] = useState(0);
+  const [diceRotY, setDiceRotY] = useState(0);
+  const [spins, setSpins] = useState({ x: 0, y: 0 });
   const [isRolling, setIsRolling] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -12,20 +13,25 @@ const Dice = forwardRef(({ onRollComplete, rollDisabled }, ref) => {
 
       const rollResult = Math.floor(Math.random() * 6) + 1;
 
-      // Add extra full rotations for dramatic effect
-      const addRotX = (Math.floor(Math.random() * 2) + 2) * 360;
-      const addRotY = (Math.floor(Math.random() * 2) + 2) * 360;
-
+      // Calculate absolute target angles for faces
       let faceRotX = 0, faceRotY = 0;
       if (rollResult === 1) { faceRotX = 0; faceRotY = 0; } // Front ⚀
       else if (rollResult === 2) { faceRotX = -90; faceRotY = 0; } // Top ⚁
+      else if (rollResult === 6) { faceRotX = -180; faceRotY = 0; } // Back ⚅
+      else if (rollResult === 5) { faceRotX = 90; faceRotY = 0; } // Bottom ⚄
       else if (rollResult === 3) { faceRotX = 0; faceRotY = -90; } // Right ⚂
       else if (rollResult === 4) { faceRotX = 0; faceRotY = 90; } // Left ⚃
-      else if (rollResult === 5) { faceRotX = 90; faceRotY = 0; } // Bottom ⚄
-      else if (rollResult === 6) { faceRotX = 0; faceRotY = -180; } // Back ⚅
 
-      setDiceRotX(prev => prev + addRotX + faceRotX);
-      setDiceRotY(prev => prev + addRotY + faceRotY);
+      // Add 2-4 full spins to current spin count
+      const addSpinsX = Math.floor(Math.random() * 2) + 2;
+      const addSpinsY = Math.floor(Math.random() * 2) + 2;
+      const newSpins = { x: spins.x + addSpinsX, y: spins.y + addSpinsY };
+      
+      setSpins(newSpins);
+      
+      // Calculate final target rotation: (total spins * 360) + target face angle
+      setDiceRotX(newSpins.x * 360 + faceRotX);
+      setDiceRotY(newSpins.y * 360 + faceRotY);
 
       setTimeout(() => {
         setIsRolling(false);

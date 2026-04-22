@@ -40,5 +40,8 @@ export const BOARD_TRACK = [
   {type:'safe', icon:'✅'}, {type:'risk', icon:'⚠️'}, {type:'bonus', icon:'➕'}, {type:'opp', icon:'💡'},
   {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'},
   {type:'safe', icon:'✅'}, {type:'bonus', icon:'➕'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'},
-  {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'}, {type:'boss', icon:'📊'}
+  {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'},
+  {type:'bonus', icon:'➕'}, {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'},
+  {type:'safe', icon:'✅'}, {type:'risk', icon:'⚠️'}, {type:'bonus', icon:'➕'}, {type:'opp', icon:'💡'},
+  {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'}, {type:'boss', icon:'📊'}
 ];

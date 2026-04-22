@@ -8,10 +8,12 @@ const Board = ({ currentPosition, charAvatar }) => {
         <svg className="spiral-path-svg" viewBox="0 0 100 100">
           <path 
             d={BOARD_TRACK.map((_, i) => {
-              const angle = (i / 35) * Math.PI * 5.2;
-              const dist = 42 - (i / 35) * 38;
-              const x = 50 + dist * Math.cos(angle);
-              const y = 50 + dist * Math.sin(angle);
+              const j = 35 - i;
+              const maxTheta = Math.PI * 4.5;
+              const theta = Math.sqrt(j / 35) * maxTheta;
+              const dist = (theta / maxTheta) * 38 + 6;
+              const x = 50 + dist * Math.cos(theta);
+              const y = 50 + dist * Math.sin(theta);
               return (i === 0 ? 'M' : 'L') + ` ${x},${y}`;
             }).join(' ')}
             fill="none" stroke="rgba(56, 189, 248, 0.4)" strokeWidth="0.8" strokeDasharray="2 3"
@@ -24,12 +26,14 @@ const Board = ({ currentPosition, charAvatar }) => {
           if (hasPassed) cls += ' passed';
           const isCurrent = i === currentPosition;
           
-          // Spiral Math for 36 tiles
-          const angle = (i / 35) * Math.PI * 5.2; // ~2.6 turns
-          const dist = 42 - (i / 35) * 38; // 42% out to 4% in
+          // Equal Arc-length Spiral Math
+          const j = 35 - i;
+          const maxTheta = Math.PI * 4.5;
+          const theta = Math.sqrt(j / 35) * maxTheta;
+          const dist = (theta / maxTheta) * 38 + 6;
           
-          const x = 50 + dist * Math.cos(angle);
-          const y = 50 + dist * Math.sin(angle);
+          const x = 50 + dist * Math.cos(theta);
+          const y = 50 + dist * Math.sin(theta);
           
           const flatStyle = {
             position: 'absolute',

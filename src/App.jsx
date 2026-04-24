@@ -391,10 +391,7 @@ function App() {
                     return (
                       <>
                         <div className="mobile-modal-header">
-                          <button className="btn-close-mobile" onClick={() => setMobileDossier(false)}>
-                            <IconRenderer name="ChevronLeft" size={20} /> กลับไปเลือก
-                          </button>
-                          <div className="modal-title-mobile">Executive Dossier</div>
+                          <div className="modal-title-mobile" style={{ marginLeft: 'auto', marginRight: 'auto' }}>Executive Dossier</div>
                         </div>
 
                         <div className="dossier-header">

@@ -1175,6 +1175,15 @@ body {
   .cb-tr { right: 20px; left: auto; }
   .cb-bl { bottom: 20px; top: auto; }
   .cb-br { right: 20px; left: auto; bottom: 20px; top: auto; }
+
+  .credits-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .credits-box {
+    padding: 20px;
+    width: 90vw;
+  }
 }
 
 /* Fix for mobile scrolling */

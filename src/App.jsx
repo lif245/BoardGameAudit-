@@ -40,8 +40,8 @@ function App() {
     });
   };
 
-  const startGame = () => {
-    const ch = CHARS.find(c => c.id === selectedCharId);
+  const startGame = (character = null) => {
+    const ch = character || CHARS.find(c => c.id === selectedCharId) || CHARS[0];
     
     let initialMaturity = { EDM: 1, APO: 1, BAI: 1, DSS: 1, MEA: 1 };
     let initialTrust = 50, initialBudget = 100, initialRisk = 50;
@@ -54,6 +54,7 @@ function App() {
     }
 
     setGameState({
+      char: ch,
       turn: 1,
       position: 0,
       trust: initialTrust,
@@ -289,7 +290,7 @@ function App() {
           {/* Action Buttons */}
           {startView === 'menu' && (
             <div className="tactical-btn-group">
-              <button className="btn-primary-tactical" onClick={() => { soundEngine.playClick(); setStartView('char_select'); }}>
+              <button className="btn-primary-tactical" onClick={() => { soundEngine.playClick(); startGame(CHARS[0]); }}>
                 <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '8px' }}>
                   <IconRenderer name="Play" size={24} fill="white" />
                 </div>
@@ -300,15 +301,20 @@ function App() {
               </button>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <button className="btn-secondary-tactical" onClick={() => setStartView('rules')}>
+                <button className="btn-secondary-tactical" onClick={() => { soundEngine.playClick(); setStartView('rules'); }}>
                   <IconRenderer name="BookOpen" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                  Protocols
+                  PROTOCOLS
                 </button>
-                <button className="btn-secondary-tactical" onClick={() => setStartView('credits')}>
-                  <IconRenderer name="Users" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                  Developers
+                <button className="btn-secondary-tactical" onClick={() => { soundEngine.playClick(); setStartView('char_select'); }}>
+                  <IconRenderer name="UserCircle" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                  PERSONNEL
                 </button>
               </div>
+
+              <button className="btn-secondary-tactical" style={{ width: '100%', marginTop: '4px' }} onClick={() => { soundEngine.playClick(); setStartView('credits'); }}>
+                <IconRenderer name="Code" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                EXECUTIVE DEVELOPERS
+              </button>
             </div>
           )}
 

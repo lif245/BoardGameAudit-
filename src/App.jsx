@@ -383,7 +383,9 @@ function App() {
                       </div>
                     ))}
                   </div>
-
+                  <div style={{marginTop:'20px'}}>
+                    <button className="btn-menu" onClick={() => setStartView('menu')}>ย้อนกลับไปหน้าหลัก</button>
+                  </div>
                 </div>
 
                 {/* Right Pane: Dossier Detail (Modal on Mobile) */}

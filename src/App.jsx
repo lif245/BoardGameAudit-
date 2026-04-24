@@ -379,7 +379,7 @@ function App() {
                           <div className="char-id-title">{c.title}</div>
                         </div>
                         <button className="mobile-info-btn" onClick={(e) => { e.stopPropagation(); setMobileDossier(true); }}>
-                          <IconRenderer name="Info" size={16} />
+                          <IconRenderer name="Info" size={14} /> <span>สเตตัส</span>
                         </button>
                       </div>
                     ))}

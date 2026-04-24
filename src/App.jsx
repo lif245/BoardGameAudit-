@@ -299,6 +299,7 @@ function App() {
                 </div>
               </button>
               
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <button className="btn-secondary-tactical" onClick={() => setStartView('rules')}>
                   <IconRenderer name="BookOpen" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
                   Protocols

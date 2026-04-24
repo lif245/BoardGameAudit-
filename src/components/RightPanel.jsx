@@ -16,8 +16,8 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
       <div className="panel-box">
         <div className="panel-title">ความสามารถเฉพาะตัว (Profile)</div>
         <div className="cs-header">
-          <div className="cs-avatar">
-            <IconRenderer name={char.iconName} size={32} />
+          <div className="cs-avatar" style={{ overflow: 'hidden' }}>
+            {char.img ? <img src={char.img} alt={char.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={char.iconName} size={32} />}
           </div>
           <div>
             <div className="cs-name">{char.name}</div>

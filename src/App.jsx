@@ -320,8 +320,8 @@ function App() {
                       className={`char-id-card ${selectedCharId === c.id ? 'selected' : ''}`} 
                       onClick={() => { soundEngine.playClick(); setSelectedCharId(c.id); }}
                     >
-                      <div className="char-id-icon">
-                        <IconRenderer name={c.iconName} size={24} />
+                      <div className="char-id-icon" style={{ overflow: 'hidden' }}>
+                        {c.img ? <img src={c.img} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={c.iconName} size={24} />}
                       </div>
                       <div className="char-id-info">
                         <div className="char-id-name">{c.name}</div>
@@ -339,8 +339,8 @@ function App() {
                     return (
                       <>
                         <div className="dossier-header">
-                          <div className="dossier-avatar-wrap">
-                            <IconRenderer name={char.iconName} size={48} />
+                          <div className="dossier-avatar-wrap" style={{ overflow: 'hidden' }}>
+                            {char.img ? <img src={char.img} alt={char.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={char.iconName} size={48} />}
                           </div>
                           <div>
                             <div className="dossier-name">{char.name}</div>
@@ -504,6 +504,7 @@ function App() {
               currentPosition={gameState.position} 
               charAvatar={gameState.char.avatar} 
               charIconName={gameState.char.iconName} 
+              charImg={gameState.char.img}
               landing={landing}
               tileFeedback={tileFeedback}
             />

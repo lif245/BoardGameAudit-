@@ -1,23 +1,23 @@
 export const CHARS = [
   {
-    id:'cio',name:'Dr. วิชัย',title:'Chief Information Officer',iconName:'UserRound', avatar:'👔', bonus:'EDM',bonusDesc:'EDM +1 อัตโนมัติ',ability:'Executive Override',abilityDesc:'เพิ่ม Trust +15 (1 ครั้ง)',passive:'Trust เริ่ม 60',startBonus:{trust:10},abilityUsed:false,
+    id:'cio',name:'Dr. วิชัย',title:'Chief Information Officer',iconName:'UserRound', avatar:'👔', img:'assets/chars/cio.png', bonus:'EDM',bonusDesc:'EDM +1 อัตโนมัติ',ability:'Executive Override',abilityDesc:'เพิ่ม Trust +15 (1 ครั้ง)',passive:'Trust เริ่ม 60',startBonus:{trust:10},abilityUsed:false,
     stats: { mgmt: 5, strat: 4, tech: 3, audit: 2 },
-    loreAbility: 'Executive Governance: เชี่ยวชาญการวางนโยบายและธรรมาภิบาลในระดับสูงสุด'
+    loreAbility: 'Executive Governance: สีฟ้า, แว่นทอง, สูทผู้บริหาร, badge ระดับ 4 พร้อม circuit pattern'
   },
   {
-    id:'risk',name:'นางสาว สุภา',title:'Risk Manager',iconName:'ShieldAlert', avatar:'🛡️', bonus:'APO',bonusDesc:'APO +1 อัตโนมัติ',ability:'Crisis Shield',abilityDesc:'เพิ่ม Risk +25 (1 ครั้ง)',passive:'Risk เริ่ม 65',startBonus:{risk:15},abilityUsed:false,
+    id:'risk',name:'นางสาว สุภา',title:'Risk Manager',iconName:'ShieldAlert', avatar:'🛡️', img:'assets/chars/risk.png', bonus:'APO',bonusDesc:'APO +1 อัตโนมัติ',ability:'Crisis Shield',abilityDesc:'เพิ่ม Risk +25 (1 ครั้ง)',passive:'Risk เริ่ม 65',startBonus:{risk:15},abilityUsed:false,
     stats: { mgmt: 3, strat: 5, tech: 2, audit: 4 },
-    loreAbility: 'Strategic Guard: ประเมินความเสี่ยงและวางแผนเชิงรุกได้อย่างแม่นยำ'
+    loreAbility: 'Strategic Guard: สีม่วง, ผมยาว, ต่างหูม่วง, clipboard ในมือ'
   },
   {
-    id:'dev',name:'นาย ธนกร',title:'Lead Developer',iconName:'Terminal', avatar:'💻', bonus:'BAI',bonusDesc:'BAI +1 อัตโนมัติ',ability:'Rapid Deploy',abilityDesc:'ลด Budget ลบ (Passive)',passive:'Budget เริ่ม 120',startBonus:{budget:20},abilityUsed:false,
+    id:'dev',name:'นาย ธนกร',title:'Lead Developer',iconName:'Terminal', avatar:'💻', img:'assets/chars/dev.png', bonus:'BAI',bonusDesc:'BAI +1 อัตโนมัติ',ability:'Rapid Deploy',abilityDesc:'ลด Budget ลบ (Passive)',passive:'Budget เริ่ม 120',startBonus:{budget:20},abilityUsed:false,
     stats: { mgmt: 2, strat: 3, tech: 5, audit: 2 },
-    loreAbility: 'Solution Architect: สร้างและนำเอาเทคโนโลยีใหม่ๆ มาปรับใช้อย่างรวดเร็ว'
+    loreAbility: 'Solution Architect: สีเขียว, ผมยุ่ง, headphone, laptop terminal และ hoodie'
   },
   {
-    id:'auditor',name:'นาง มาลี',title:'Internal Auditor',iconName:'FileSearch', avatar:'📋', bonus:'MEA',bonusDesc:'MEA +1 อัตโนมัติ',ability:'Emergency Fund',abilityDesc:'เพิ่ม Budget 20 (1 ครั้ง)',passive:'Maturity เริ่ม Lv.2',startBonus:{maturity:1},abilityUsed:false,
+    id:'auditor',name:'นาง มารี',title:'Internal Auditor',iconName:'FileSearch', avatar:'📋', img:'assets/chars/auditor.png', bonus:'MEA',bonusDesc:'MEA +1 อัตโนมัติ',ability:'Emergency Fund',abilityDesc:'เพิ่ม Budget 20 (1 ครั้ง)',passive:'Maturity เริ่ม Lv.2',startBonus:{maturity:1},abilityUsed:false,
     stats: { mgmt: 2, strat: 3, tech: 2, audit: 5 },
-    loreAbility: 'Objective Assurance: ตรวจสอบและประเมินผลระบบงานอย่างโปร่งใส'
+    loreAbility: 'Objective Assurance: สีทอง, ผม bun เรียบร้อย, แว่นทอง, badge ตัว A และเอกสาร audit'
   }
 ];
 

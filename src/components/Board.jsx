@@ -2,7 +2,7 @@ import React from 'react';
 import { BOARD_TRACK } from '../constants';
 import IconRenderer from '../utils/IconRenderer';
 
-const Board = ({ currentPosition, charAvatar, charIconName, landing = false, tileFeedback = null }) => {
+const Board = ({ currentPosition, charAvatar, charIconName, charImg, landing = false, tileFeedback = null }) => {
   return (
     <div className="board-square-spiral-wrapper">
       <div className="board-flat-container">
@@ -63,7 +63,13 @@ const Board = ({ currentPosition, charAvatar, charIconName, landing = false, til
               </div>
               {isCurrent && (
                 <div className="player-token-glass">
-                  {charIconName ? <IconRenderer name={charIconName} size={24} className="player-icon" /> : charAvatar}
+                  {charImg ? (
+                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--primary-blue)', boxShadow: '0 0 10px var(--primary-blue)' }}>
+                      <img src={charImg} alt="player" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  ) : (
+                    charIconName ? <IconRenderer name={charIconName} size={24} className="player-icon" /> : charAvatar
+                  )}
                   <div className="token-shadow"></div>
                 </div>
               )}

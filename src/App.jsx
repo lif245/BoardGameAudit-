@@ -11,6 +11,7 @@ import RadarChart from './components/RadarChart';
 
 function App() {
   const [screen, setScreen] = useState('start'); // start, game, end
+  const [endResult, setEndResult] = useState(null); 
   const [startView, setStartView] = useState('menu'); // menu, rules, credits, char_select
   const [selectedCharId, setSelectedCharId] = useState('cio');
   

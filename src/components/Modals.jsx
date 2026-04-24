@@ -138,7 +138,7 @@ export const BossModal = ({ gameState, mTotal, mPower, riskBonus, bossRoll, onRo
     
     return (
       <div className="overlay-wrap">
-        <div className={`card-modal ${isWin ? 'shake' : ''}`} style={isWin ? {borderColor: 'var(--status-opp)', boxShadow: '0 0 30px rgba(16, 185, 129, 0.3)'} : {borderColor: 'var(--status-boss)'}}>
+        <div className={`card-modal boss-modal ${isWin ? 'shake' : ''}`} style={isWin ? {borderColor: 'var(--status-opp)', boxShadow: '0 0 30px rgba(16, 185, 129, 0.3)'} : {borderColor: 'var(--status-boss)'}}>
           <div style={{display: 'flex', justifyContent: 'center', marginBottom: '12px'}}>
             <IconRenderer name={isWin ? "Trophy" : "AlertCircle"} size={64} className={isWin ? "text-yellow-400" : "text-red-500"} />
           </div>

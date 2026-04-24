@@ -355,7 +355,7 @@ function App() {
           )}
 
           {startView === 'char_select' && (
-            <div className="menu-modal-container" style={{ width: '100%', maxWidth: '1000px' }}>
+            <div className="menu-modal-container" style={{ width: '100%', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto' }}>
               <div className="char-selection-container">
                 {/* Left Pane: Selection List */}
                 <div className="char-list">

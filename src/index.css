@@ -22,15 +22,7 @@
 :root {
   /* Corporate Admin Dashboard Theme (Dark Slate) */
   --color-text-primary: #f8fafc;
-  --status-opp: #10b981;
-  --status-boss: #ef4444;
-  
-  /* Tactical HUD Stat Colors */
-  --stat-trust: #fbbf24;  /* Gold */
-  --stat-budget: #3b82f6; /* Blue */
-  --stat-risk: #ef4444;   /* Red */
-  --stat-qol: #a855f7;    /* Purple */
-  
+  --color-text-secondary: #94a3b8;
   --primary-blue: #3b82f6;
   --primary-blue-hover: #2563eb;
   --bg-dark: #0f172a;
@@ -40,6 +32,8 @@
   --border-focus: #475569;
   
   --status-risk: #f59e0b;
+  --status-opp: #10b981;
+  --status-boss: #ef4444;
   --status-neutral: #64748b;
   
   --radius-sm: 6px;
@@ -615,117 +609,6 @@ body {
 }
 .end-grade { font-size: 64px; margin-bottom: 16px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); }
 
-/* --- TACTICAL HUD GAMEPLAY LAYOUT --- */
-.gameplay-container {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 24px;
-  height: calc(100vh - 120px);
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.gameplay-main {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  position: relative;
-}
-
-.gameplay-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
-  padding-right: 8px;
-}
-
-/* Stat Cards HUD */
-.tactical-stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.tactical-stat-card {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid var(--border-color);
-  padding: 16px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  transition: all 0.3s;
-}
-
-.tactical-stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; width: 4px; height: 100%;
-}
-
-.ts-trust::before { background: var(--stat-trust); }
-.ts-budget::before { background: var(--stat-budget); }
-.ts-risk::before { background: var(--stat-risk); }
-.ts-qol::before { background: var(--stat-qol); }
-
-.stat-card-label {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.stat-card-value {
-  font-size: 28px;
-  font-weight: 900;
-  font-family: 'Inter', monospace;
-}
-
-/* Board SVG Nodes */
-.board-node {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.node-passed { fill: #10b981; filter: drop-shadow(0 0 5px #10b981); }
-.node-current { fill: #ef4444; filter: drop-shadow(0 0 8px #ef4444); }
-.node-event { fill: #3b82f6; filter: drop-shadow(0 0 5px #3b82f6); }
-.char-marker-tactical {
-  filter: drop-shadow(0 0 10px var(--primary-blue));
-  animation: float 2s ease-in-out infinite;
-}
-
-.char-avatar-ring {
-  width: 24px;
-  height: 24px;
-  background: var(--bg-dark);
-  border: 2px solid var(--primary-blue);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  box-shadow: 0 0 15px var(--primary-blue);
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-
-@keyframes pulse-red {
-  0% { filter: drop-shadow(0 0 2px #ef4444); }
-  50% { filter: drop-shadow(0 0 10px #ef4444); }
-  100% { filter: drop-shadow(0 0 2px #ef4444); }
-}
-
-.node-current {
-  animation: pulse-red 1.5s infinite;
-}
-
 /* Audio Player Floating Widget */
 .audio-player-widget {
   position: absolute; bottom: 24px; left: 24px; z-index: 100;
@@ -1297,46 +1180,10 @@ body {
     grid-template-columns: 1fr;
     gap: 8px;
   }
-  .gameplay-container {
-    grid-template-columns: 1fr;
-    height: auto;
-    gap: 16px;
+  .credits-box {
+    padding: 20px;
+    width: 90vw;
   }
-
-  .gameplay-sidebar {
-    padding-right: 0;
-  }
-
-  .tactical-stats-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.btn-secondary-tactical {
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid var(--border-color);
-  color: var(--color-text-primary);
-  padding: 10px 16px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-radius: var(--radius-sm);
-}
-
-.btn-secondary-tactical:hover:not(:disabled) {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: var(--primary-blue);
-  color: var(--primary-blue);
-}
-
-.board-svg-wrapper {
-  min-height: 400px;
 }
 
 /* Fix for mobile scrolling */

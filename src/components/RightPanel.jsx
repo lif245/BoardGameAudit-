@@ -3,8 +3,8 @@ import { DOMAINS_DEF } from '../constants';
 import IconRenderer from '../utils/IconRenderer';
 import { soundEngine } from '../utils/soundEngine';
 
-const RightPanel = ({ gameState, onUseAbility, onUseItem, onExecutiveOverride }) => {
-  const { char, maturity, items, log, overrideUsed } = gameState;
+const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
+  const { char, maturity, items, log } = gameState;
 
   const handleAction = (fn) => {
     soundEngine.playClick();
@@ -14,7 +14,7 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem, onExecutiveOverride })
   return (
     <div className="right-panel">
       <div className="panel-box">
-        <div className="panel-title">SYSTEM PROFILE</div>
+        <div className="panel-title">ความสามารถเฉพาะตัว (Profile)</div>
         <div className="cs-header">
           <div className="cs-avatar" style={{ overflow: 'hidden' }}>
             {char.img ? <img src={char.img} alt={char.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={char.iconName} size={32} />}
@@ -25,28 +25,20 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem, onExecutiveOverride })
           </div>
         </div>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div>
           {!char.abilityUsed && char.id !== 'dev' ? (
-            <button className="btn-secondary-tactical" style={{ width: '100%' }} onClick={() => handleAction(onUseAbility)}>
-              <IconRenderer name="Zap" size={14} style={{marginRight:'8px'}} />
-              {char.ability}
+            <button className="btn-game btn-primary-game" style={{ width: '100%', textAlign: 'center' }} onClick={() => handleAction(onUseAbility)}>
+              ⚡ ใช้สกิล: {char.ability}
+            </button>
+          ) : char.id === 'dev' ? (
+            <button className="btn-game" style={{ width: '100%', cursor: 'default' }} disabled>
+              ⚡ เสริมประสิทธิภาพ (Passive)
             </button>
           ) : (
-            <button className="btn-secondary-tactical" style={{ width: '100%', opacity: 0.5 }} disabled>
-              <IconRenderer name="Zap" size={14} style={{marginRight:'8px'}} />
-              {char.abilityUsed ? 'Ability Expended' : 'Passive Active'}
+            <button className="btn-game" style={{ width: '100%', cursor: 'default', borderStyle: 'dashed' }} disabled>
+              ⚡ สกิลหมดความพร้อม
             </button>
           )}
-
-          <button 
-            className="btn-secondary-tactical" 
-            style={{ width: '100%', borderColor: overrideUsed ? 'transparent' : 'var(--stat-trust)', color: overrideUsed ? 'var(--color-text-secondary)' : 'var(--stat-trust)' }} 
-            disabled={overrideUsed}
-            onClick={() => handleAction(onExecutiveOverride)}
-          >
-            <IconRenderer name="UserCheck" size={14} style={{marginRight:'8px'}} />
-            {overrideUsed ? 'OVERRIDE DEPLOYED' : 'EXECUTIVE OVERRIDE'}
-          </button>
         </div>
       </div>
 

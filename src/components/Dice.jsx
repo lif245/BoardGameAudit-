@@ -1,7 +1,7 @@
 import React, { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
 import { soundEngine } from '../utils/soundEngine';
 
-const Dice = forwardRef(({ onRollComplete, rollDisabled, label = 'Execute Evaluation Run' }, ref) => {
+const Dice = forwardRef(({ onRollComplete, rollDisabled }, ref) => {
   const [diceRotX, setDiceRotX] = useState(0);
   const [diceRotY, setDiceRotY] = useState(0);
   const [spins, setSpins] = useState({ x: 0, y: 0 });
@@ -72,7 +72,7 @@ const Dice = forwardRef(({ onRollComplete, rollDisabled, label = 'Execute Evalua
         disabled={rollDisabled || isRolling}
         onClick={handleRollClick}
       >
-        {label}
+        🚀 Execute Evaluation Run
       </button>
     </div>
   );

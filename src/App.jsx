@@ -258,26 +258,72 @@ function App() {
     return (
       <div className="game-wrap">
         <AudioPlayer />
-        <div className="screen active" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '650px', background: 'radial-gradient(circle at center, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 1) 100%)' }}>
-          
-          <div className="game-logo-container" style={{ textAlign: 'center', marginBottom: '40px', animation: 'floatToken 4s ease-in-out infinite' }}>
-            <div style={{ fontSize: '80px', marginBottom: '10px', filter: 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.5))', display: 'flex', justifyContent: 'center' }}>
-              <IconRenderer name="Target" size={80} className="text-blue-400" />
+        <div className="hud-screen">
+          {/* Tactical Corner Brackets */}
+          <div className="corner-bracket cb-tl"></div>
+          <div className="corner-bracket cb-tr"></div>
+          <div className="corner-bracket cb-bl"></div>
+          <div className="corner-bracket cb-br"></div>
+
+          {/* Hexagon Logo Section */}
+          <div className="hexagon-logo-wrap">
+            <div className="logo-crosshair"></div>
+            <div className="hexagon-logo">
+              <IconRenderer name="Target" size={60} className="text-blue-400" />
             </div>
-            <div style={{ fontSize: '48px', fontWeight: 800, letterSpacing: '4px', color: 'var(--color-text-primary)', textShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 10px rgba(255, 255, 255, 0.2)' }}>COBIT QUEST</div>
-            <div style={{ fontSize: '16px', color: 'var(--color-text-secondary)', letterSpacing: '6px', textTransform: 'uppercase', marginTop: '4px' }}>Enterprise Audit Simulator</div>
           </div>
 
+          {/* Typography Section */}
+          <div className="menu-typography">
+            <h1 className="main-title">COBIT QUEST</h1>
+            <div className="sub-title-tactical">GOVERNANCE FRAMEWORK EDITION</div>
+            
+            <div className="domain-pills-row">
+              <span className="domain-pill-mini">APO</span>
+              <span className="domain-pill-mini">DSS</span>
+              <span className="domain-pill-mini">MEA</span>
+              <span className="domain-pill-mini">EDM</span>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
           {startView === 'menu' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}>
-              <button className="btn-menu primary" onClick={() => setStartView('char_select')}>▶ เริ่มเกม (Start Game)</button>
-              <button className="btn-menu" onClick={() => setStartView('rules')}>📖 ระเบียบการ (Rules)</button>
-              <button className="btn-menu" onClick={() => setStartView('credits')}>👨‍💻 ทีมผู้พัฒนา (Credits)</button>
+            <div className="tactical-btn-group">
+              <button className="btn-primary-tactical" onClick={() => { soundEngine.playClick(); setStartView('char_select'); }}>
+                <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '8px' }}>
+                  <IconRenderer name="Play" size={24} fill="white" />
+                </div>
+                <div>
+                  <span className="btn-label">INITIALIZE SESSION</span>
+                  <span className="btn-sub">Start Enterprise Audit Simulation</span>
+                </div>
+              </button>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <button className="btn-secondary-tactical" onClick={() => setStartView('rules')}>
+                  <IconRenderer name="BookOpen" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                  Protocols
+                </button>
+                <button className="btn-secondary-tactical" onClick={() => setStartView('credits')}>
+                  <IconRenderer name="Users" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                  Developers
+                </button>
+              </div>
             </div>
           )}
 
+          {/* HUD Status Bar */}
+          <div className="hud-status-bar">
+            <div className="status-indicator">
+              <div className="status-dot"></div>
+              <span>SYSTEM ONLINE</span>
+            </div>
+            <div>VER 1.0.4 // LOCALHOST // ENCRYPTED</div>
+          </div>
+
+          {/* Overlay Modals for Credits/Rules (Still using existing logic but centered) */}
           {startView === 'credits' && (
-            <div className="menu-modal-container">
+            <div className="menu-modal-container" style={{ position: 'absolute', zIndex: 2000 }}>
               <div className="credits-box" style={{ margin: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
                 <div className="credits-title">👨‍💻 ทีมผู้พัฒนา (Executive Developers)</div>
                 <div className="credits-grid">

@@ -887,3 +887,133 @@ body {
   animation: blink 1s infinite;
 }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* =============================================
+   MOBILE & RESPONSIVENESS
+   ============================================= */
+
+@media (max-width: 1024px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+  .right-panel {
+    order: 2;
+  }
+  .center-board {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
+  .game-wrap {
+    min-height: auto;
+  }
+
+  .main-title {
+    font-size: 42px;
+    letter-spacing: 6px;
+  }
+
+  .tactical-btn-group {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .board-square-spiral-wrapper {
+    max-width: 95vw;
+    transform: scale(0.8);
+    margin-top: -40px;
+    margin-bottom: -40px;
+  }
+
+  .char-selection-container {
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+  }
+
+  .char-list {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    max-height: 250px;
+    overflow-y: auto;
+  }
+
+  .dossier-view {
+    padding: 20px;
+  }
+
+  .dossier-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .dossier-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hud-status-bar {
+    padding: 0 15px;
+    font-size: 9px;
+  }
+  
+  .game-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 32px;
+    letter-spacing: 4px;
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-num {
+    font-size: 20px;
+  }
+
+  .board-square-spiral-wrapper {
+    transform: scale(0.65);
+    margin-top: -80px;
+    margin-bottom: -80px;
+  }
+
+  .btn-primary-tactical .btn-label {
+    font-size: 14px;
+  }
+
+  .cb-tl, .cb-tr, .cb-bl, .cb-br {
+    width: 20px;
+    height: 20px;
+    top: 20px;
+    left: 20px;
+  }
+  .cb-tr { right: 20px; left: auto; }
+  .cb-bl { bottom: 20px; top: auto; }
+  .cb-br { right: 20px; left: auto; bottom: 20px; top: auto; }
+}
+
+/* Fix for mobile scrolling */
+.log-panel {
+  max-height: 200px;
+}
+
+.panel-box {
+  margin-bottom: 12px;
+}

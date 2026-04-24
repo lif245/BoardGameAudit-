@@ -20,10 +20,10 @@ function App() {
   const [bossActive, setBossActive] = useState(false);
   const [bossRoll, setBossRoll] = useState(null);
   
-  const [endResult, setEndResult] = useState(null);
   const [toast, setToast] = useState({ show: false, msg: '' });
   const [landing, setLanding] = useState(false);
   const [tileFeedback, setTileFeedback] = useState(null);
+  const [mobileDossier, setMobileDossier] = useState(false);
   
   const diceRef = useRef();
 
@@ -355,35 +355,55 @@ function App() {
           )}
 
           {startView === 'char_select' && (
-            <div className="menu-modal-container" style={{ width: '100%', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div className="menu-modal-container char-selection-modal-wrapper" style={{ width: '100%', maxWidth: '1000px' }}>
               <div className="char-selection-container">
-                {/* Left Pane: Selection List */}
-                <div className="char-list">
-                  <div style={{fontSize:'12px', fontWeight:800, color:'var(--primary-blue)', marginBottom:'8px', textTransform:'uppercase', letterSpacing:'1px', textAlign: 'left'}}>Executive Clearance List</div>
-                  {CHARS.map(c => (
-                    <div 
-                      key={c.id} 
-                      className={`char-id-card ${selectedCharId === c.id ? 'selected' : ''}`} 
-                      onClick={() => { soundEngine.playClick(); setSelectedCharId(c.id); }}
-                    >
-                      <div className="char-id-icon" style={{ overflow: 'hidden' }}>
-                        {c.img ? <img src={c.img} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={c.iconName} size={24} />}
+                {/* Left Pane: Selection List (Grid on Mobile) */}
+                <div className={`char-list ${mobileDossier ? 'hidden-mobile' : ''}`}>
+                  <div className="selection-header-mobile">
+                    <div style={{fontSize:'12px', fontWeight:800, color:'var(--primary-blue)', textTransform:'uppercase', letterSpacing:'1px'}}>Executive Clearance List</div>
+                    <div className="mobile-only-hint" style={{fontSize:'10px', opacity:0.6}}>แตะเพื่อเลือก / กด (i) เพื่อดูสเตตัส</div>
+                  </div>
+                  
+                  <div className="char-grid-mobile">
+                    {CHARS.map(c => (
+                      <div 
+                        key={c.id} 
+                        className={`char-id-card ${selectedCharId === c.id ? 'selected' : ''}`} 
+                        onClick={() => { soundEngine.playClick(); setSelectedCharId(c.id); }}
+                      >
+                        <div className="char-id-icon" style={{ overflow: 'hidden' }}>
+                          {c.img ? <img src={c.img} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={c.iconName} size={24} />}
+                        </div>
+                        <div className="char-id-info">
+                          <div className="char-id-name">{c.name}</div>
+                          <div className="char-id-title">{c.title}</div>
+                        </div>
+                        <button className="mobile-info-btn" onClick={(e) => { e.stopPropagation(); setMobileDossier(true); }}>
+                          <IconRenderer name="Info" size={16} />
+                        </button>
                       </div>
-                      <div className="char-id-info">
-                        <div className="char-id-name">{c.name}</div>
-                        <div className="char-id-title">{c.title}</div>
-                      </div>
-                    </div>
-                  ))}
-                  <button className="btn-menu" style={{ marginTop: 'auto', padding: '12px' }} onClick={() => { soundEngine.playClick(); setStartView('menu'); }}>ย้อนกลับ</button>
+                    ))}
+                  </div>
+
+                  <div className="char-select-actions-mobile">
+                    <button className="btn-menu" onClick={() => { soundEngine.playClick(); setStartView('menu'); }}>ย้อนกลับ</button>
+                    <button className="btn-menu primary" onClick={() => { soundEngine.playClick(); startGame(); }}>เริ่มระบบ ➔</button>
+                  </div>
                 </div>
 
-                {/* Right Pane: Dossier Detail */}
-                <div className="dossier-view">
+                {/* Right Pane: Dossier Detail (Modal on Mobile) */}
+                <div className={`dossier-view ${mobileDossier ? 'mobile-modal-active' : 'hidden-mobile'}`}>
                   {(() => {
                     const char = CHARS.find(c => c.id === selectedCharId) || CHARS[0];
                     return (
                       <>
+                        <div className="mobile-modal-header">
+                          <button className="btn-close-mobile" onClick={() => setMobileDossier(false)}>
+                            <IconRenderer name="ChevronLeft" size={20} /> กลับไปเลือก
+                          </button>
+                          <div className="modal-title-mobile">Executive Dossier</div>
+                        </div>
+
                         <div className="dossier-header">
                           <div className="dossier-avatar-wrap" style={{ overflow: 'hidden' }}>
                             {char.img ? <img src={char.img} alt={char.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={char.iconName} size={48} />}
@@ -434,7 +454,7 @@ function App() {
                         <div className="dossier-footer">
                           <button 
                             className="btn-game btn-primary-game" 
-                            style={{ padding: '14px 40px', fontSize: '15px' }}
+                            style={{ padding: '14px 40px', fontSize: '15px', width: '100%' }}
                             onClick={() => { soundEngine.playClick(); startGame(); }}
                           >
                             เริ่มระบบ (INITIALIZE SESSION)

@@ -371,7 +371,11 @@ function App() {
                       <div 
                         key={c.id} 
                         className={`char-id-card ${selectedCharId === c.id ? 'selected' : ''}`} 
-                        onClick={() => { soundEngine.playClick(); setSelectedCharId(c.id); }}
+                        onClick={() => { 
+                          soundEngine.playClick(); 
+                          setSelectedCharId(c.id); 
+                          setMobileDossier(true); 
+                        }}
                       >
                         <div className="char-id-icon" style={{ overflow: 'hidden' }}>
                           {c.img ? <img src={c.img} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={c.iconName} size={24} />}

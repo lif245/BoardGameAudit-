@@ -386,8 +386,7 @@ function App() {
                   </div>
 
                   <div className="char-select-actions-mobile">
-                    <button className="btn-menu" onClick={() => { soundEngine.playClick(); setStartView('menu'); }}>ย้อนกลับ</button>
-                    <button className="btn-menu primary" onClick={() => { soundEngine.playClick(); startGame(); }}>เริ่มระบบ ➔</button>
+                    <button className="btn-menu" style={{ width: '100%', border: '1px solid var(--border-color)' }} onClick={() => { soundEngine.playClick(); setStartView('menu'); }}>ย้อนกลับ</button>
                   </div>
                 </div>
 

@@ -1,15 +1,24 @@
 import React from 'react';
 import { DOMAINS_DEF } from '../constants';
+import IconRenderer from '../utils/IconRenderer';
+import { soundEngine } from '../utils/soundEngine';
 
 const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
   const { char, maturity, items, log } = gameState;
+
+  const handleAction = (fn) => {
+    soundEngine.playClick();
+    fn();
+  };
 
   return (
     <div className="right-panel">
       <div className="panel-box">
         <div className="panel-title">ความสามารถเฉพาะตัว (Profile)</div>
         <div className="cs-header">
-          <div className="cs-avatar">{char.avatar}</div>
+          <div className="cs-avatar">
+            <IconRenderer name={char.iconName} size={32} />
+          </div>
           <div>
             <div className="cs-name">{char.name}</div>
             <div className="cs-role">{char.title}</div>
@@ -18,7 +27,7 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
         
         <div>
           {!char.abilityUsed && char.id !== 'dev' ? (
-            <button className="btn-game btn-primary-game" style={{ width: '100%', textAlign: 'center' }} onClick={onUseAbility}>
+            <button className="btn-game btn-primary-game" style={{ width: '100%', textAlign: 'center' }} onClick={() => handleAction(onUseAbility)}>
               ⚡ ใช้สกิล: {char.ability}
             </button>
           ) : char.id === 'dev' ? (
@@ -38,7 +47,10 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
         <div className="domain-grid">
           {DOMAINS_DEF.map(d => (
             <div className="dom-row" key={d.id}>
-              <div className="dt-name" style={{ color: d.color }}>{d.name}</div>
+              <div className="dt-name" style={{ color: d.color, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <IconRenderer name={d.iconName} size={14} />
+                {d.name}
+              </div>
               <div className="dt-bar">
                 <div className="dt-fill" style={{ width: `${(maturity[d.id] / 5) * 100}%`, background: `linear-gradient(90deg, transparent 0%, ${d.color} 100%)` }}></div>
               </div>
@@ -51,10 +63,10 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
       {items.filter(i => i.owned).length > 0 && (
         <div className="panel-box">
           <div className="panel-title">ทรัพยากรตัวช่วยที่มีอยู่</div>
-          <div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             {items.filter(i => i.owned).map(i => (
-              <span key={i.id} className="item-chip" onClick={() => onUseItem(i.id)} title={i.desc}>
-                {i.icon} {i.name}
+              <span key={i.id} className="item-chip" onClick={() => handleAction(() => onUseItem(i.id))} title={i.desc}>
+                <IconRenderer name={i.iconName} size={14} /> {i.name}
               </span>
             ))}
           </div>
@@ -77,3 +89,4 @@ const RightPanel = ({ gameState, onUseAbility, onUseItem }) => {
 };
 
 export default RightPanel;
+

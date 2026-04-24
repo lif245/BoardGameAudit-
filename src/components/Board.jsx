@@ -1,6 +1,8 @@
 import React from 'react';
 import { BOARD_TRACK } from '../constants';
-const Board = ({ currentPosition, charAvatar }) => {
+import IconRenderer from '../utils/IconRenderer';
+
+const Board = ({ currentPosition, charAvatar, charIconName, landing = false, tileFeedback = null }) => {
   return (
     <div className="board-square-spiral-wrapper">
       <div className="board-flat-container">
@@ -24,7 +26,9 @@ const Board = ({ currentPosition, charAvatar }) => {
           let cls = `track-cell-glass t-${t.type}`;
           const hasPassed = i < currentPosition;
           if (hasPassed) cls += ' passed';
+          
           const isCurrent = i === currentPosition;
+          if (isCurrent && landing) cls += ' current-landing';
           
           // Equal Arc-length Spiral Math
           const j = 35 - i;
@@ -45,12 +49,21 @@ const Board = ({ currentPosition, charAvatar }) => {
 
           return (
             <div key={i} className={cls} style={flatStyle}>
+              {/* Tile Feedback (เดินช่องไหนได้อะไร) */}
+              {isCurrent && tileFeedback && (
+                <div className={`tile-feedback ${tileFeedback.type === 'neg' ? 'negative' : ''}`}>
+                  {tileFeedback.msg}
+                </div>
+              )}
+
               {/* Premium Sci-Fi Look */}
               <span className="cell-num">{i === BOARD_TRACK.length - 1 ? 'EVAL' : (i || 'INIT')}</span>
-              <div className="cell-icon">{t.icon}</div>
+              <div className="cell-icon">
+                <IconRenderer name={t.iconName} size={14} />
+              </div>
               {isCurrent && (
                 <div className="player-token-glass">
-                  {charAvatar}
+                  {charIconName ? <IconRenderer name={charIconName} size={24} className="player-icon" /> : charAvatar}
                   <div className="token-shadow"></div>
                 </div>
               )}
@@ -63,3 +76,4 @@ const Board = ({ currentPosition, charAvatar }) => {
 };
 
 export default Board;
+

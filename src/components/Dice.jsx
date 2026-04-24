@@ -1,4 +1,5 @@
 import React, { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
+import { soundEngine } from '../utils/soundEngine';
 
 const Dice = forwardRef(({ onRollComplete, rollDisabled }, ref) => {
   const [diceRotX, setDiceRotX] = useState(0);
@@ -40,6 +41,11 @@ const Dice = forwardRef(({ onRollComplete, rollDisabled }, ref) => {
     }
   }));
 
+  const handleRollClick = () => {
+    soundEngine.playClick();
+    ref.current?.triggerRoll();
+  };
+
   return (
     <div className="dice-panel">
       <div className="dice-panel-title">Evaluation Engine (Randomizer)</div>
@@ -64,9 +70,9 @@ const Dice = forwardRef(({ onRollComplete, rollDisabled }, ref) => {
         className="btn-game btn-primary-game" 
         style={{ width: '220px' }}
         disabled={rollDisabled || isRolling}
-        onClick={() => ref.current?.triggerRoll()}
+        onClick={handleRollClick}
       >
-        🎲 Execute Evaluation Run
+        🚀 Execute Evaluation Run
       </button>
     </div>
   );

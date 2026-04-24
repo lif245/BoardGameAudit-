@@ -5,6 +5,9 @@ import Board from './components/Board';
 import RightPanel from './components/RightPanel';
 import { EventModal, ResultModal, BossModal } from './components/Modals';
 import AudioPlayer from './components/AudioPlayer';
+import { soundEngine } from './utils/soundEngine';
+import IconRenderer from './utils/IconRenderer';
+import RadarChart from './components/RadarChart';
 
 function App() {
   const [screen, setScreen] = useState('start'); // start, game, end
@@ -19,6 +22,8 @@ function App() {
   
   const [endResult, setEndResult] = useState(null);
   const [toast, setToast] = useState({ show: false, msg: '' });
+  const [landing, setLanding] = useState(false);
+  const [tileFeedback, setTileFeedback] = useState(null);
   
   const diceRef = useRef();
 
@@ -99,6 +104,7 @@ function App() {
   };
 
   const handleRollComplete = (rollResult) => {
+    soundEngine.playRoll();
     addLog(`สุ่มได้ประเมินรหัส ${rollResult}`, gameState.turn);
     
     let stepCount = 0;
@@ -109,9 +115,12 @@ function App() {
       if (stepCount < rollResult && currentPos < maxPos) {
         currentPos++;
         stepCount++;
+        soundEngine.playMove();
         setGameState(prev => ({ ...prev, position: currentPos }));
       } else {
         clearInterval(moveInterval);
+        setLanding(true);
+        setTimeout(() => setLanding(false), 1000);
         setTimeout(() => processTile(currentPos), 300);
       }
     }, 250);
@@ -135,15 +144,20 @@ function App() {
           const itemToGive = unowned[Math.floor(Math.random() * unowned.length)];
           newState.items = newState.items.map(i => i.id === itemToGive.id ? { ...i, owned: true } : i);
           showToast('ได้รับไอเทมช่วยเหลือ!');
+          setTileFeedback({ msg: `+ Item: ${itemToGive.name}`, type: 'pos' });
         }
         addLog('พบทรัพยากรพิเศษ! ดึงไอเทมเข้ากระเป๋าสำเร็จ', newState.turn);
       } else if (t.type === 'safe') {
         addLog('ผ่านช่วงดำเนินการเงียบสงบ ไม่มีข้อบ่งชี้ความเสี่ยง', newState.turn);
+        setTileFeedback({ msg: 'Safe Area', type: 'pos' });
       } else if (t.type === 'risk' || t.type === 'opp') {
         const pool = EVENTS[t.type];
         const ev = pool[Math.floor(Math.random() * pool.length)];
         setEventModal({ type: t.type, ev });
+        setTileFeedback({ msg: t.type === 'risk' ? 'Risk Alert!' : 'Opportunity!', type: t.type === 'risk' ? 'neg' : 'pos' });
       }
+
+      setTimeout(() => setTileFeedback(null), 2000);
 
       return newState;
     });
@@ -178,6 +192,12 @@ function App() {
 
     if (chips.length === 0) chips.push({ type: 'ec-neutral', text: 'ไม่มีผลกระทบ' });
 
+    if (eff.budget < 0 || eff.trust < 0 || eff.risk < 0) {
+      soundEngine.playAlert();
+    } else {
+      soundEngine.playSuccess();
+    }
+
     setGameState(prev => applyEffect(eff, prev));
     setResultModal({ choice, chips });
     setEventModal(null);
@@ -191,6 +211,7 @@ function App() {
     setGameState(prev => {
       const item = prev.items.find(x => x.id === id);
       if (item && item.owned) {
+        soundEngine.playSuccess();
         showToast(`ใช้งาน ${item.name} สำเร็จ!`);
         addLog(`System Override: ใช้งาน ${item.name}`, prev.turn);
         let newState = applyEffect(item.effect, prev);
@@ -204,6 +225,7 @@ function App() {
   const handleUseAbility = () => {
     setGameState(prev => {
       if (!prev.char.abilityUsed) {
+        soundEngine.playSuccess();
         let eff = {};
         if (prev.char.id === 'cio') { eff = { trust: 15 }; showToast('Executive Override Activated: Trust +15'); }
         if (prev.char.id === 'risk') { eff = { risk: 25 }; showToast('Crisis Shield Deployed: Risk +25'); }
@@ -218,6 +240,7 @@ function App() {
   };
 
   const handleRollBoss = () => {
+    soundEngine.playRoll();
     const d1 = Math.floor(Math.random() * 6) + 1;
     const d2 = Math.floor(Math.random() * 6) + 1;
     setBossRoll({ d1, d2, total: d1 + d2 });
@@ -238,7 +261,9 @@ function App() {
         <div className="screen active" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '650px', background: 'radial-gradient(circle at center, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 1) 100%)' }}>
           
           <div className="game-logo-container" style={{ textAlign: 'center', marginBottom: '40px', animation: 'floatToken 4s ease-in-out infinite' }}>
-            <div style={{ fontSize: '80px', marginBottom: '10px', filter: 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.5))' }}>📊</div>
+            <div style={{ fontSize: '80px', marginBottom: '10px', filter: 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.5))', display: 'flex', justifyContent: 'center' }}>
+              <IconRenderer name="Target" size={80} className="text-blue-400" />
+            </div>
             <div style={{ fontSize: '48px', fontWeight: 800, letterSpacing: '4px', color: 'var(--color-text-primary)', textShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 10px rgba(255, 255, 255, 0.2)' }}>COBIT QUEST</div>
             <div style={{ fontSize: '16px', color: 'var(--color-text-secondary)', letterSpacing: '6px', textTransform: 'uppercase', marginTop: '4px' }}>Enterprise Audit Simulator</div>
           </div>
@@ -284,24 +309,95 @@ function App() {
           )}
 
           {startView === 'char_select' && (
-            <div className="menu-modal-container" style={{ width: '100%', maxWidth: '900px' }}>
-              <div style={{fontSize:'16px', fontWeight:600, color:'var(--color-text-secondary)', marginBottom:'16px', textAlign:'center', letterSpacing:'1px'}}>เลือกรับบทบาทผู้บริหาร (SELECT EXECUTIVE PROFILE)</div>
-              <div className="char-grid">
-                {CHARS.map(c => (
-                  <div key={c.id} className={`char-card ${selectedCharId === c.id ? 'selected' : ''}`} style={{ background: 'rgba(30, 41, 59, 0.9)', backdropFilter: 'blur(10px)' }} onClick={() => setSelectedCharId(c.id)}>
-                    <span className="char-avatar" style={{ fontSize: '42px' }}>{c.avatar}</span>
-                    <div className="char-name">{c.name}</div>
-                    <div className="char-title">{c.title}</div>
-                    <span className="char-bonus">{c.bonusDesc}</span>
-                  </div>
-                ))}
-              </div>
-              
-              <div style={{display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '32px'}}>
-                <button className="btn-menu" style={{ width: '160px' }} onClick={() => setStartView('menu')}>ย้อนกลับ</button>
-                <button className="btn-menu primary" style={{ width: '220px', fontSize: '15px', fontWeight: 600 }} onClick={startGame}>
-                  ▶ เริ่มระบบ (Initialize)
-                </button>
+            <div className="menu-modal-container" style={{ width: '100%', maxWidth: '1000px' }}>
+              <div className="char-selection-container">
+                {/* Left Pane: Selection List */}
+                <div className="char-list">
+                  <div style={{fontSize:'12px', fontWeight:800, color:'var(--primary-blue)', marginBottom:'8px', textTransform:'uppercase', letterSpacing:'1px', textAlign: 'left'}}>Executive Clearance List</div>
+                  {CHARS.map(c => (
+                    <div 
+                      key={c.id} 
+                      className={`char-id-card ${selectedCharId === c.id ? 'selected' : ''}`} 
+                      onClick={() => { soundEngine.playClick(); setSelectedCharId(c.id); }}
+                    >
+                      <div className="char-id-icon">
+                        <IconRenderer name={c.iconName} size={24} />
+                      </div>
+                      <div className="char-id-info">
+                        <div className="char-id-name">{c.name}</div>
+                        <div className="char-id-title">{c.title}</div>
+                      </div>
+                    </div>
+                  ))}
+                  <button className="btn-menu" style={{ marginTop: 'auto', padding: '12px' }} onClick={() => { soundEngine.playClick(); setStartView('menu'); }}>ย้อนกลับ</button>
+                </div>
+
+                {/* Right Pane: Dossier Detail */}
+                <div className="dossier-view">
+                  {(() => {
+                    const char = CHARS.find(c => c.id === selectedCharId) || CHARS[0];
+                    return (
+                      <>
+                        <div className="dossier-header">
+                          <div className="dossier-avatar-wrap">
+                            <IconRenderer name={char.iconName} size={48} />
+                          </div>
+                          <div>
+                            <div className="dossier-name">{char.name}</div>
+                            <div className="dossier-title">{char.title}</div>
+                            <div style={{display:'flex', gap:'8px'}}>
+                              <span className="char-bonus" style={{background:'rgba(59, 130, 246, 0.1)', color:'var(--primary-blue)', padding: '4px 8px', borderRadius: '4px', fontSize: '10px'}}>LEVEL 4 CLEARANCE</span>
+                              <span className="char-bonus" style={{background:'rgba(16, 185, 129, 0.1)', color:'var(--status-opp)', padding: '4px 8px', borderRadius: '4px', fontSize: '10px'}}>AUTHENTICATED</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div style={{marginBottom:'24px'}}>
+                          <div className="panel-title" style={{marginBottom:'12px', color:'var(--color-text-primary)'}}>Executive Capability Matrix</div>
+                          <div className="dossier-stats-grid">
+                            {[
+                              { label: 'Management', val: char.stats.mgmt },
+                              { label: 'Strategy', val: char.stats.strat },
+                              { label: 'Technical', val: char.stats.tech },
+                              { label: 'Audit/Compliance', val: char.stats.audit }
+                            ].map(s => (
+                              <div key={s.label} className="dossier-stat-item">
+                                <div className="stat-lbl-row">
+                                  <span>{s.label}</span>
+                                  <span>LVL {s.val}/5</span>
+                                </div>
+                                <div className="stat-bar-bg">
+                                  <div className="stat-bar-fill" style={{ width: `${(s.val/5)*100}%` }}></div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="dossier-ability-box">
+                          <div className="ability-title">
+                            <IconRenderer name="Zap" size={16} />
+                            <span>Executive Ability: {char.ability}</span>
+                          </div>
+                          <div className="ability-desc" style={{fontSize: '13px', lineHeight: '1.6'}}>
+                            {char.loreAbility}<br/>
+                            <span style={{color:'var(--status-opp)', fontSize:'12px', fontWeight:600}}>System Effect: {char.abilityDesc}</span>
+                          </div>
+                        </div>
+
+                        <div className="dossier-footer">
+                          <button 
+                            className="btn-game btn-primary-game" 
+                            style={{ padding: '14px 40px', fontSize: '15px' }}
+                            onClick={() => { soundEngine.playClick(); startGame(); }}
+                          >
+                            เริ่มระบบ (INITIALIZE SESSION)
+                          </button>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
               </div>
             </div>
           )}
@@ -329,6 +425,11 @@ function App() {
             <div style={{fontSize:'28px', fontWeight:700, marginBottom:'12px', color, fontFamily:"'Inter',sans-serif", letterSpacing:'0.5px'}}>{title}</div>
             <div style={{color:'var(--color-text-secondary)', marginBottom:'32px', fontSize:'15px', lineHeight:1.6}}>{sub}</div>
             
+            <div className="radar-wrap">
+              <div style={{fontSize:'14px', fontWeight:700, color:'var(--primary-blue)', marginBottom:'16px', textTransform:'uppercase'}}>Maturity Radar Chart</div>
+              <RadarChart data={gameState?.maturity || {}} domains={DOMAINS_DEF} />
+            </div>
+
             <div style={{display:'flex', justifyContent:'center', gap:'16px', marginBottom: '40px', flexWrap:'wrap'}}>
               <div className="stat-box" style={{width:'130px', textAlign:'center'}}>
                 <div style={{fontSize:'24px', fontWeight:600, color:'var(--color-text-primary)', fontFamily:"'Inter'"}}>{gameState?.trust}</div>
@@ -354,9 +455,14 @@ function App() {
   }
 
   // GAME RENDERING
-  const mTotal = Object.values(gameState.maturity).reduce((a, b) => a + b, 0);
+  const mTotal = gameState ? Object.values(gameState.maturity).reduce((a, b) => a + b, 0) : 0;
   const mPower = mTotal * 2;
-  const riskBonus = gameState.risk > 50 ? 5 : 0;
+  const riskBonus = (gameState?.risk || 0) > 50 ? 5 : 0;
+
+  // Dynamic Background Logic
+  let matClass = 'mat-low';
+  if (mTotal > 10 && mTotal <= 20) matClass = 'mat-mid';
+  if (mTotal > 20) matClass = 'mat-high';
 
   const drawStat = (label, val, icon, dangerThresh = 20) => {
     let colorClass = val <= dangerThresh ? 'var(--status-boss)' : 'var(--color-text-primary)';
@@ -372,7 +478,7 @@ function App() {
   };
 
   return (
-    <div className="game-wrap">
+    <div className={`game-wrap ${matClass}`}>
       <AudioPlayer />
       <div className="screen active">
         <div className="game-header">
@@ -394,7 +500,13 @@ function App() {
             
             <Dice ref={diceRef} onRollComplete={handleRollComplete} rollDisabled={eventModal || resultModal || bossActive} />
 
-            <Board currentPosition={gameState.position} charAvatar={gameState.char.avatar} />
+            <Board 
+              currentPosition={gameState.position} 
+              charAvatar={gameState.char.avatar} 
+              charIconName={gameState.char.iconName} 
+              landing={landing}
+              tileFeedback={tileFeedback}
+            />
           </div>
 
           <RightPanel gameState={gameState} onUseAbility={handleUseAbility} onUseItem={handleUseItem} />

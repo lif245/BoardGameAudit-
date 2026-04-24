@@ -1,23 +1,39 @@
 export const CHARS = [
-  {id:'cio',name:'Dr. วิชัย',title:'Chief Information Officer',avatar:'👔', bonus:'EDM',bonusDesc:'EDM +1 อัตโนมัติ',ability:'Executive Override',abilityDesc:'เพิ่ม Trust +15 (1 ครั้ง)',passive:'Trust เริ่ม 60',startBonus:{trust:10},abilityUsed:false},
-  {id:'risk',name:'นางสาว สุภา',title:'Risk Manager',avatar:'🛡️', bonus:'APO',bonusDesc:'APO +1 อัตโนมัติ',ability:'Crisis Shield',abilityDesc:'เพิ่ม Risk +25 (1 ครั้ง)',passive:'Risk เริ่ม 65',startBonus:{risk:15},abilityUsed:false},
-  {id:'dev',name:'นาย ธนกร',title:'Lead Developer',avatar:'💻', bonus:'BAI',bonusDesc:'BAI +1 อัตโนมัติ',ability:'Rapid Deploy',abilityDesc:'ลด Budget ลบ (Passive)',passive:'Budget เริ่ม 120',startBonus:{budget:20},abilityUsed:false},
-  {id:'auditor',name:'นาง มาลี',title:'Internal Auditor',avatar:'📋', bonus:'MEA',bonusDesc:'MEA +1 อัตโนมัติ',ability:'Emergency Fund',abilityDesc:'เพิ่ม Budget 20 (1 ครั้ง)',passive:'Maturity เริ่ม Lv.2',startBonus:{maturity:1},abilityUsed:false}
+  {
+    id:'cio',name:'Dr. วิชัย',title:'Chief Information Officer',iconName:'UserRound', avatar:'👔', bonus:'EDM',bonusDesc:'EDM +1 อัตโนมัติ',ability:'Executive Override',abilityDesc:'เพิ่ม Trust +15 (1 ครั้ง)',passive:'Trust เริ่ม 60',startBonus:{trust:10},abilityUsed:false,
+    stats: { mgmt: 5, strat: 4, tech: 3, audit: 2 },
+    loreAbility: 'Executive Governance: เชี่ยวชาญการวางนโยบายและธรรมาภิบาลในระดับสูงสุด'
+  },
+  {
+    id:'risk',name:'นางสาว สุภา',title:'Risk Manager',iconName:'ShieldAlert', avatar:'🛡️', bonus:'APO',bonusDesc:'APO +1 อัตโนมัติ',ability:'Crisis Shield',abilityDesc:'เพิ่ม Risk +25 (1 ครั้ง)',passive:'Risk เริ่ม 65',startBonus:{risk:15},abilityUsed:false,
+    stats: { mgmt: 3, strat: 5, tech: 2, audit: 4 },
+    loreAbility: 'Strategic Guard: ประเมินความเสี่ยงและวางแผนเชิงรุกได้อย่างแม่นยำ'
+  },
+  {
+    id:'dev',name:'นาย ธนกร',title:'Lead Developer',iconName:'Terminal', avatar:'💻', bonus:'BAI',bonusDesc:'BAI +1 อัตโนมัติ',ability:'Rapid Deploy',abilityDesc:'ลด Budget ลบ (Passive)',passive:'Budget เริ่ม 120',startBonus:{budget:20},abilityUsed:false,
+    stats: { mgmt: 2, strat: 3, tech: 5, audit: 2 },
+    loreAbility: 'Solution Architect: สร้างและนำเอาเทคโนโลยีใหม่ๆ มาปรับใช้อย่างรวดเร็ว'
+  },
+  {
+    id:'auditor',name:'นาง มาลี',title:'Internal Auditor',iconName:'FileSearch', avatar:'📋', bonus:'MEA',bonusDesc:'MEA +1 อัตโนมัติ',ability:'Emergency Fund',abilityDesc:'เพิ่ม Budget 20 (1 ครั้ง)',passive:'Maturity เริ่ม Lv.2',startBonus:{maturity:1},abilityUsed:false,
+    stats: { mgmt: 2, strat: 3, tech: 2, audit: 5 },
+    loreAbility: 'Objective Assurance: ตรวจสอบและประเมินผลระบบงานอย่างโปร่งใส'
+  }
 ];
 
 export const DOMAINS_DEF = [
-  {id:'EDM',name:'EDM',icon:'🏛️',color:'#eab308'}, 
-  {id:'APO',name:'APO',icon:'📐',color:'#a855f7'},
-  {id:'BAI',name:'BAI',icon:'🔧',color:'#14b8a6'}, 
-  {id:'DSS',name:'DSS',icon:'⚙️',color:'#3b82f6'},
-  {id:'MEA',name:'MEA',icon:'📊',color:'#f43f5e'}
+  {id:'EDM',name:'EDM',iconName:'Gavel',color:'#eab308'}, 
+  {id:'APO',name:'APO',iconName:'Layout',color:'#a855f7'},
+  {id:'BAI',name:'BAI',iconName:'Wrench',color:'#14b8a6'}, 
+  {id:'DSS',name:'DSS',iconName:'Settings',color:'#3b82f6'},
+  {id:'MEA',name:'MEA',iconName:'BarChart3',color:'#f43f5e'}
 ];
 
 export const ITEMS = [
-  {id:'budget_pack',name:'กองทุนด่วน',desc:'Budget +20',uses:1,effect:{budget:20}, icon:'💰'},
-  {id:'trust_boost',name:'PR Event',desc:'Trust +15',uses:1,effect:{trust:15}, icon:'🤝'},
-  {id:'risk_barrier',name:'Firewall',desc:'Risk Buffer +20',uses:1,effect:{risk:20}, icon:'🛡️'},
-  {id:'mat_boost',name:'System Upgrade',desc:'Maturity +1 ทุกโดเมน',uses:1,effect:{maturity:{EDM:1,APO:1,BAI:1,DSS:1,MEA:1}}, icon:'✨'}
+  {id:'budget_pack',name:'กองทุนด่วน',desc:'Budget +20',uses:1,effect:{budget:20}, iconName:'Coins'},
+  {id:'trust_boost',name:'PR Event',desc:'Trust +15',uses:1,effect:{trust:15}, iconName:'Users'},
+  {id:'risk_barrier',name:'Firewall',desc:'Risk Buffer +20',uses:1,effect:{risk:20}, iconName:'ShieldCheck'},
+  {id:'mat_boost',name:'System Upgrade',desc:'Maturity +1 ทุกโดเมน',uses:1,effect:{maturity:{EDM:1,APO:1,BAI:1,DSS:1,MEA:1}}, iconName:'Zap'}
 ];
 
 export const EVENTS = {
@@ -34,14 +50,15 @@ export const EVENTS = {
 };
 
 export const BOARD_TRACK = [
-  {type:'start', icon:'🏁'},
-  {type:'safe', icon:'✅'}, {type:'risk', icon:'⚠️'}, {type:'opp', icon:'💡'}, {type:'safe', icon:'✅'},
-  {type:'bonus', icon:'➕'}, {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'},
-  {type:'safe', icon:'✅'}, {type:'risk', icon:'⚠️'}, {type:'bonus', icon:'➕'}, {type:'opp', icon:'💡'},
-  {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'},
-  {type:'safe', icon:'✅'}, {type:'bonus', icon:'➕'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'},
-  {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'}, {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'},
-  {type:'bonus', icon:'➕'}, {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'}, {type:'opp', icon:'💡'},
-  {type:'safe', icon:'✅'}, {type:'risk', icon:'⚠️'}, {type:'bonus', icon:'➕'}, {type:'opp', icon:'💡'},
-  {type:'risk', icon:'⚠️'}, {type:'safe', icon:'✅'}, {type:'boss', icon:'📊'}
+  {type:'start', iconName:'Flag'},
+  {type:'safe', iconName:'ShieldCheck'}, {type:'risk', iconName:'AlertTriangle'}, {type:'opp', iconName:'Lightbulb'}, {type:'safe', iconName:'ShieldCheck'},
+  {type:'bonus', iconName:'PlusCircle'}, {type:'risk', iconName:'AlertTriangle'}, {type:'safe', iconName:'ShieldCheck'}, {type:'opp', iconName:'Lightbulb'},
+  {type:'safe', iconName:'ShieldCheck'}, {type:'risk', iconName:'AlertTriangle'}, {type:'bonus', iconName:'PlusCircle'}, {type:'opp', iconName:'Lightbulb'},
+  {type:'risk', iconName:'AlertTriangle'}, {type:'safe', iconName:'ShieldCheck'}, {type:'opp', iconName:'Lightbulb'}, {type:'risk', iconName:'AlertTriangle'},
+  {type:'safe', iconName:'ShieldCheck'}, {type:'bonus', iconName:'PlusCircle'}, {type:'opp', iconName:'Lightbulb'}, {type:'risk', iconName:'AlertTriangle'},
+  {type:'safe', iconName:'ShieldCheck'}, {type:'opp', iconName:'Lightbulb'}, {type:'risk', iconName:'AlertTriangle'}, {type:'safe', iconName:'ShieldCheck'},
+  {type:'bonus', iconName:'PlusCircle'}, {type:'risk', iconName:'AlertTriangle'}, {type:'safe', iconName:'ShieldCheck'}, {type:'opp', iconName:'Lightbulb'},
+  {type:'safe', iconName:'ShieldCheck'}, {type:'risk', iconName:'AlertTriangle'}, {type:'bonus', iconName:'PlusCircle'}, {type:'opp', iconName:'Lightbulb'},
+  {type:'risk', iconName:'AlertTriangle'}, {type:'safe', iconName:'ShieldCheck'}, {type:'boss', iconName:'Target'}
 ];
+

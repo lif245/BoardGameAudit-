@@ -295,25 +295,19 @@ function App() {
                   <IconRenderer name="Play" size={24} fill="white" />
                 </div>
                 <div>
-                  <span className="btn-label">INITIALIZE SESSION</span>
-                  <span className="btn-sub">Start Enterprise Audit Simulation</span>
+                  <span className="btn-label">เริ่มการตรวจสอบ (START)</span>
+                  <span className="btn-sub">เริ่มต้นการจำลองระบบตรวจสอบองค์กร</span>
                 </div>
               </button>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <button className="btn-secondary-tactical" onClick={() => { soundEngine.playClick(); setStartView('rules'); }}>
-                  <IconRenderer name="BookOpen" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                  PROTOCOLS
-                </button>
-                <button className="btn-secondary-tactical" onClick={() => { soundEngine.playClick(); setStartView('char_select'); }}>
-                  <IconRenderer name="UserCircle" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                  PERSONNEL
-                </button>
-              </div>
+              <button className="btn-secondary-tactical" style={{ width: '100%', marginBottom: '8px' }} onClick={() => { soundEngine.playClick(); setStartView('rules'); }}>
+                <IconRenderer name="BookOpen" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                ระเบียบปฏิบัติ (PROTOCOLS)
+              </button>
 
-              <button className="btn-secondary-tactical" style={{ width: '100%', marginTop: '4px' }} onClick={() => { soundEngine.playClick(); setStartView('credits'); }}>
+              <button className="btn-secondary-tactical" style={{ width: '100%' }} onClick={() => { soundEngine.playClick(); setStartView('credits'); }}>
                 <IconRenderer name="Code" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                EXECUTIVE DEVELOPERS
+                คณะผู้พัฒนา (EXECUTIVE DEVELOPERS)
               </button>
             </div>
           )}

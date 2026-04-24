@@ -378,16 +378,10 @@ function App() {
                           <div className="char-id-name">{c.name}</div>
                           <div className="char-id-title">{c.title}</div>
                         </div>
-                        <button className="mobile-info-btn" onClick={(e) => { e.stopPropagation(); setMobileDossier(true); }}>
-                          <IconRenderer name="Info" size={14} /> <span>สเตตัส</span>
-                        </button>
                       </div>
                     ))}
                   </div>
 
-                  <div className="char-select-actions-mobile">
-                    <button className="btn-menu" style={{ width: '100%', border: '1px solid var(--border-color)' }} onClick={() => { soundEngine.playClick(); setStartView('menu'); }}>ย้อนกลับ</button>
-                  </div>
                 </div>
 
                 {/* Right Pane: Dossier Detail (Modal on Mobile) */}

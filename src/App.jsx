@@ -103,22 +103,22 @@ function App() {
     return { ...currentState, trust: newTrust, budget: newBudget, risk: newRisk, maturity: newMaturity };
   };
 
-  const handleRollComplete = (rollResult) => {
-    soundEngine.playRoll();
-    addLog(`สุ่มได้ประเมินรหัส ${rollResult}`, gameState.turn);
-    
-    let stepCount = 0;
+  const handleRollComplete = (steps) => {
+    soundEngine.playMove();
     let currentPos = gameState.position;
-    const maxPos = BOARD_TRACK.length - 1;
+    let stepsLeft = steps;
 
-    const moveInterval = setInterval(() => {
-      if (stepCount < rollResult && currentPos < maxPos) {
+    // Safety clear any existing interval
+    if (window.moveInterval) clearInterval(window.moveInterval);
+
+    window.moveInterval = setInterval(() => {
+      if (stepsLeft > 0 && currentPos < BOARD_TRACK.length - 1) {
         currentPos++;
-        stepCount++;
-        soundEngine.playMove();
+        stepsLeft--;
         setGameState(prev => ({ ...prev, position: currentPos }));
       } else {
-        clearInterval(moveInterval);
+        clearInterval(window.moveInterval);
+        window.moveInterval = null;
         setLanding(true);
         setTimeout(() => setLanding(false), 1000);
         setTimeout(() => processTile(currentPos), 300);
@@ -358,7 +358,7 @@ function App() {
             <div className="menu-modal-container char-selection-modal-wrapper" style={{ width: '100%', maxWidth: '1000px' }}>
               <div className="char-selection-container">
                 {/* Left Pane: Selection List (Grid on Mobile) */}
-                <div className={`char-list ${mobileDossier ? 'hidden-mobile' : ''}`}>
+                <div className={`char-list ${mobileDossier ? 'hidden-mobile-only' : ''}`}>
                   <div className="selection-header-mobile">
                     <div style={{fontSize:'12px', fontWeight:800, color:'var(--primary-blue)', textTransform:'uppercase', letterSpacing:'1px'}}>Executive Clearance List</div>
                     <div className="mobile-only-hint" style={{fontSize:'10px', opacity:0.6}}>แตะเพื่อเลือก / กด (i) เพื่อดูสเตตัส</div>
@@ -392,7 +392,7 @@ function App() {
                 </div>
 
                 {/* Right Pane: Dossier Detail (Modal on Mobile) */}
-                <div className={`dossier-view ${mobileDossier ? 'mobile-modal-active' : 'hidden-mobile'}`}>
+                <div className={`dossier-view ${mobileDossier ? 'mobile-modal-active' : ''}`}>
                   {(() => {
                     const char = CHARS.find(c => c.id === selectedCharId) || CHARS[0];
                     return (
@@ -485,7 +485,11 @@ function App() {
     return (
       <div className="game-wrap">
         <AudioPlayer />
-        <div className="screen active">
+        <div className="hud-screen" style={{ overflowY: 'auto', display: 'block', padding: '40px 0' }}>
+          <div className="corner-bracket cb-tl"></div>
+          <div className="corner-bracket cb-tr"></div>
+          <div className="corner-bracket cb-bl"></div>
+          <div className="corner-bracket cb-br"></div>
           <div className="end-hero">
             <div className="end-grade">{icon}</div>
             <div style={{fontSize:'28px', fontWeight:700, marginBottom:'12px', color, fontFamily:"'Inter',sans-serif", letterSpacing:'0.5px'}}>{title}</div>

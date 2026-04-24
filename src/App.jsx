@@ -299,14 +299,17 @@ function App() {
                 </div>
               </button>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <button className="btn-secondary-tactical" onClick={() => setStartView('rules')}>
                   <IconRenderer name="BookOpen" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
                   Protocols
                 </button>
-                <button className="btn-secondary-tactical" onClick={() => setStartView('credits')}>
+                <button className="btn-secondary-tactical" onClick={() => setStartView('personnel')}>
+                  <IconRenderer name="UserSearch" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                  Personnel
+                </button>
+                <button className="btn-secondary-tactical" onClick={() => setStartView('credits')} style={{ gridColumn: 'span 2' }}>
                   <IconRenderer name="Users" size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                  Developers
+                  Executive Developers
                 </button>
               </div>
             </div>
@@ -322,7 +325,77 @@ function App() {
           </div>
 
           {/* Overlay Modals for Credits/Rules (Still using existing logic but centered) */}
-          {startView === 'credits' && (
+          {startView === 'personnel' && (
+            <div className="menu-modal-container char-selection-modal-wrapper" style={{ width: '100%', maxWidth: '1000px' }}>
+              <div style={{padding:'20px', borderBottom:'1px solid var(--border-color)', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                  <IconRenderer name="UserSearch" size={20} color="var(--primary-blue)" />
+                  <span style={{fontWeight:800, letterSpacing:'2px'}}>EXECUTIVE PERSONNEL DATABASE</span>
+                </div>
+                <button className="btn-close-mobile" onClick={() => setStartView('menu')} style={{position:'static'}}>
+                  <IconRenderer name="X" size={20} />
+                </button>
+              </div>
+              <div className="char-selection-container" style={{maxHeight:'70vh'}}>
+                {/* Same layout as selection but for browsing */}
+                <div className="char-list">
+                  {CHARS.map(c => (
+                    <div 
+                      key={c.id} 
+                      className={`char-id-card ${selectedCharId === c.id ? 'selected' : ''}`} 
+                      onClick={() => { soundEngine.playClick(); setSelectedCharId(c.id); }}
+                    >
+                      <div className="char-id-icon" style={{ overflow: 'hidden' }}>
+                        {c.img ? <img src={c.img} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={c.iconName} size={24} />}
+                      </div>
+                      <div className="char-id-info">
+                        <div className="char-id-name">{c.name}</div>
+                        <div className="char-id-title">{c.title}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="dossier-view" style={{display:'flex'}}>
+                  {(() => {
+                    const char = CHARS.find(c => c.id === selectedCharId) || CHARS[0];
+                    return (
+                      <>
+                        <div className="dossier-header">
+                          <div className="dossier-avatar-wrap" style={{ overflow: 'hidden' }}>
+                            {char.img ? <img src={char.img} alt={char.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <IconRenderer name={char.iconName} size={48} />}
+                          </div>
+                          <div>
+                            <div className="dossier-name">{char.name}</div>
+                            <div className="dossier-title">{char.title}</div>
+                            <div style={{color:'var(--status-opp)', fontSize:'10px', fontWeight:800, marginTop:'4px'}}>ACTIVE PERSONNEL // CLEARANCE LEVEL 4</div>
+                          </div>
+                        </div>
+                        <div className="dossier-stats-grid">
+                          {[
+                            { label: 'Management', val: char.stats.mgmt },
+                            { label: 'Strategy', val: char.stats.strat },
+                            { label: 'Technical', val: char.stats.tech },
+                            { label: 'Audit/Compliance', val: char.stats.audit }
+                          ].map(s => (
+                            <div key={s.label} className="dossier-stat-item">
+                              <div className="stat-lbl-row"><span>{s.label}</span><span>LVL {s.val}/5</span></div>
+                              <div className="stat-bar-bg"><div className="stat-bar-fill" style={{ width: `${(s.val/5)*100}%` }}></div></div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="dossier-ability-box" style={{marginTop:'20px'}}>
+                          <div className="ability-title"><IconRenderer name="ShieldCheck" size={16} /> <span>Career Summary & Expertise</span></div>
+                          <div className="ability-desc" style={{fontSize:'13px', lineHeight:'1.7', fontStyle:'italic', color:'var(--color-text-secondary)'}}>
+                            {char.loreAbility}
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+            </div>
+          )}
             <div className="menu-modal-container" style={{ position: 'absolute', zIndex: 2000 }}>
               <div className="credits-box" style={{ margin: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
                 <div className="credits-title">👨‍💻 ทีมผู้พัฒนา (Executive Developers)</div>

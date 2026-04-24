@@ -249,6 +249,7 @@ function App() {
   };
 
   const handleAcknowledgeBoss = (result) => {
+    console.log("App: handleAcknowledgeBoss called with:", result);
     setBossActive(false);
     setBossRoll(null);
     setEndResult(result);

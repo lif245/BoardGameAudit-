@@ -81,6 +81,7 @@ export const BossModal = ({ gameState, mTotal, mPower, riskBonus, bossRoll, onRo
   const [tempDice, setTempDice] = React.useState({ d1: 1, d2: 1 });
 
   const handleAcknowledge = (result) => {
+    console.log("BossModal: Acknowledging result:", result);
     soundEngine.playClick();
     onAcknowledgeBoss(result);
   };

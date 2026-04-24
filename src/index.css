@@ -524,8 +524,27 @@ body {
 .choice-list { display: flex; flex-direction: column; gap: 10px; }
 
 /* Boss Modal specifically */
-.boss-modal { text-align: center; border: 2px solid var(--status-boss); position: relative; overflow: hidden; }
-.boss-modal::before { content: ''; position: absolute; top:0; left:0; right:0; height:4px; background: var(--status-boss); }
+.boss-modal { 
+  text-align: center; 
+  border: 1px solid var(--status-boss); 
+  position: relative; 
+  overflow: hidden; 
+  background: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 0 50px rgba(239, 68, 68, 0.3), inset 0 0 25px rgba(239, 68, 68, 0.1);
+}
+.boss-modal::before { 
+  content: ''; 
+  position: absolute; top:0; left:0; right:0; height:4px; 
+  background: var(--status-boss); 
+  box-shadow: 0 0 15px var(--status-boss);
+}
+.boss-modal::after {
+  content: 'CRITICAL AUDIT';
+  position: absolute; top: 10px; right: -35px;
+  background: var(--status-boss); color: white;
+  padding: 2px 40px; transform: rotate(45deg);
+  font-size: 9px; font-weight: 900; letter-spacing: 2px;
+}
 
 /* Buttons */
 .btn-game { 
@@ -564,8 +583,31 @@ body {
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 /* End Screen */
-.end-hero { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 600px; margin: 0 auto; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 40px; }
-.end-grade { font-size: 64px; margin-bottom: 16px; }
+.end-hero { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  text-align: center; 
+  max-width: 650px; 
+  width: 90%;
+  margin: 0 auto; 
+  background: rgba(15, 23, 42, 0.9); 
+  border: 1px solid var(--border-color); 
+  border-radius: var(--radius-lg); 
+  padding: 40px; 
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+  backdrop-filter: blur(20px);
+}
+.end-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  margin: 10px;
+  pointer-events: none;
+}
+.end-grade { font-size: 64px; margin-bottom: 16px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); }
 
 /* Audio Player Floating Widget */
 .audio-player-widget {
@@ -599,6 +641,26 @@ body {
 .btn-menu:hover {
   background: rgba(59, 130, 246, 0.2); border-color: var(--primary-blue);
   transform: translateY(-2px); box-shadow: 0 6px 15px rgba(59, 130, 246, 0.2);
+}
+
+.rules-box, .credits-box {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--primary-blue);
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.2), inset 0 0 20px rgba(59, 130, 246, 0.1);
+  position: relative;
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  backdrop-filter: blur(20px);
+}
+
+.rules-box::before, .credits-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--primary-blue);
+  box-shadow: 0 0 10px var(--primary-blue);
 }
 .btn-menu.primary {
   background: rgba(59, 130, 246, 0.8); border: 1px solid #60a5fa; font-weight: 600; font-size: 18px;
@@ -1016,4 +1078,39 @@ body {
 
 .panel-box {
   margin-bottom: 12px;
+}
+
+/* Extra Mobile Fine-tuning */
+@media (max-width: 600px) {
+  .radar-container {
+    transform: scale(0.85);
+    margin: -20px 0;
+  }
+  .end-hero {
+    padding: 20px 15px;
+  }
+  .end-grade {
+    font-size: 48px;
+  }
+  .hud-status-bar {
+    display: none; /* Hide status bar on small mobile to save space */
+  }
+  .audio-player-widget {
+    bottom: 10px;
+    left: 10px;
+    transform: scale(0.8);
+  }
+}
+
+@media (max-height: 700px) {
+  .hexagon-logo-wrap {
+    transform: scale(0.7);
+    margin-bottom: 10px;
+  }
+  .main-title {
+    font-size: 36px;
+  }
+  .tactical-btn-group {
+    gap: 8px;
+  }
 }

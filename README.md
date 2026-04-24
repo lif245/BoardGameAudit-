@@ -1,29 +1,50 @@
-# COBIT Board Quest - Ultimate Boss Edition
+# 💼 PORTFOLIO: Nuttapon (lif245)
+### 🏛️ IT Governance & Interactive System Developer
 
-Welcome to **COBIT Board Quest**, a strategic board game designed to simulate IT Governance (COBIT) in a high-stakes corporate environment.
-
-## 🎮 Game Premise
-As an IT Manager, your goal is to navigate the complexities of governance, manage risks, and seize opportunities to upgrade your organization's **Maturity Levels**. Your final challenge? Defeat the **Ultimate Auditor** in a high-stakes audit battle!
-
-## 🚀 How to Play
-1. **Choose your Character**: Each manager has unique bonuses and active/passive abilities.
-2. **Roll the Dice**: Navigate the digital board.
-3. **Handle Events**:
-   - **Risk Cards**: Navigate critical failures and minimize damage.
-   - **Opportunity Cards**: Invest in upgrades and boost Trust/Budget.
-4. **Upgrade Maturity**: Level up EDM, APO, BAI, DSS, and MEA domains to gain power.
-5. **The Final Audit**: Reach the end to face the boss. Your Maturity levels are your primary weapon!
-
-## 🛠️ Tech Stack
-- **HTML5 Semantic Structure**
-- **Vanilla CSS3** (Cyberpunk Theme, Glassmorphism, CSS Animations)
-- **Vanilla JavaScript** (Game Engine, State Management)
-
-## 🌐 Deployment
-This project is ready for **GitHub Pages**.
-1. Go to **Settings > Pages**.
-2. Select `main` branch and `/ (root)`.
-3. Your game will be live at `https://<your-username>.github.io/BoardGameAudit-/`
+![Portfolio Banner](https://raw.githubusercontent.com/lif245/BoardGameAudit-/main/public/assets/github_banner.png)
 
 ---
-*Created with ❤️ by Antigravity AI for the COBIT Governance Project.*
+
+## 🛡️ Featured Project: COBIT QUEST
+**"Bridging the gap between IT Audit theory and Interactive Experience."**
+
+![Project Preview](https://raw.githubusercontent.com/lif245/BoardGameAudit-/main/public/assets/portfolio_preview.png)
+
+### 🚀 Overview
+**COBIT QUEST** is an Enterprise Audit Simulator designed to help professionals and students understand the **COBIT 2019 Framework** through a gamified tactical experience. 
+
+- **Live Demo:** [Play COBIT Quest](https://lif245.github.io/BoardGameAudit-/)
+- **Core Domains:** EDM (Evaluate, Direct, Monitor), APO (Align, Plan, Organize), BAI (Build, Acquire, Implement), DSS (Deliver, Service, Support), MEA (Monitor, Evaluate, Assess).
+
+### 💎 Key Technical Achievements
+- **Tactical HUD Design:** A custom-built, full-screen "Command Center" UI using vanilla CSS and JavaScript.
+- **Mobile-First Excellence:** Fully responsive grid systems and modal workflows optimized for one-handed touch interaction.
+- **Dynamic State Engine:** Real-time calculation of Trust, Budget, Risk, and Maturity levels with complex event branching.
+- **Audit Logic Integration:** Implemented maturity assessment algorithms to simulate realistic board-level audit sessions.
+
+---
+
+## 🛠️ Capability Matrix (Skills)
+| Capability | Proficiency | Technologies |
+| :--- | :--- | :--- |
+| **Frontend Engineering** | Expert | React, Vite, CSS3 (Animations), HTML5 |
+| **Governance & Audit** | Advanced | COBIT 2019, Risk Management, IT Compliance |
+| **UI/UX Design** | Specialist | Tactical HUD, Glassmorphism, Responsive Design |
+| **Systems Logic** | Advanced | Game Mechanics, State Management, Algorithm Design |
+
+---
+
+## 📈 Professional Stats
+<p align="left">
+  <img src="https://github-readme-stats.vercel.app/api?username=lif245&show_icons=true&theme=tokyonight" height="150" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=lif245&layout=compact&theme=tokyonight" height="150" />
+</p>
+
+---
+
+## 📫 Connect & Collaborate
+- **GitHub:** [@lif245](https://github.com/lif245)
+- **Current Focus:** Expanding the COBIT Quest ecosystem with AI-driven audit scenarios.
+
+---
+*This portfolio is maintained as an open-source project to demonstrate technical and governance expertise.*

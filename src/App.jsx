@@ -290,7 +290,7 @@ function App() {
           {/* Action Buttons */}
           {startView === 'menu' && (
             <div className="tactical-btn-group">
-              <button className="btn-primary-tactical" onClick={() => { soundEngine.playClick(); startGame(CHARS[0]); }}>
+              <button className="btn-primary-tactical" onClick={() => { soundEngine.playClick(); setStartView('char_select'); }}>
                 <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '8px' }}>
                   <IconRenderer name="Play" size={24} fill="white" />
                 </div>

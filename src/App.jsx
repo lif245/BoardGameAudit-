@@ -397,6 +397,7 @@ function App() {
               </div>
             </div>
           )}
+          {startView === 'credits' && (
             <div className="menu-modal-container" style={{ position: 'absolute', zIndex: 2000 }}>
               <div className="credits-box" style={{ margin: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
                 <div className="credits-title">👨‍💻 ทีมผู้พัฒนา (Executive Developers)</div>

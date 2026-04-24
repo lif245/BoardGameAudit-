@@ -61,6 +61,7 @@ function App() {
       budget: initialBudget,
       risk: initialRisk,
       maturity: initialMaturity,
+      overrideUsed: false,
       log: [{ turn: 1, msg: 'ติดตั้งระบบเสร็จสิ้น: ควบคุมตัวแปร Trust และ Budget ให้อยู่ในระดับปลอดภัย' }],
       char: JSON.parse(JSON.stringify(ch)),
       items: JSON.parse(JSON.stringify(ITEMS))
@@ -540,15 +541,14 @@ function App() {
   if (mTotal > 10 && mTotal <= 20) matClass = 'mat-mid';
   if (mTotal > 20) matClass = 'mat-high';
 
-  const drawStat = (label, val, icon, dangerThresh = 20) => {
-    let colorClass = val <= dangerThresh ? 'var(--status-boss)' : 'var(--color-text-primary)';
+  const drawStat = (label, val, icon, type) => {
     return (
-      <div className="stat-box">
-        <div className="stat-header">
-          <span className="stat-lbl">{label}</span>
-          <span className="stat-icon">{icon}</span>
+      <div className={`tactical-stat-card ts-${type}`}>
+        <div className="stat-card-label">
+          <IconRenderer name={icon} size={12} style={{marginRight: '6px'}} />
+          {label}
         </div>
-        <div className="stat-num" style={{ color: colorClass }}>{val}</div>
+        <div className="stat-card-value">{val}</div>
       </div>
     );
   };
@@ -557,36 +557,52 @@ function App() {
     <div className={`game-wrap ${matClass}`}>
       <AudioPlayer />
       <div className="screen active">
-        <div className="game-header">
-          <div style={{display:'flex', alignItems:'center', gap:'16px'}}>
-            <span className="header-title">ความคืบหน้าการตรวจสอบ (Progress)</span>
-            <span className="turn-badge">รอบเดินที่ {gameState.turn}</span>
-          </div>
-          <button className="btn-game" onClick={() => showToast('เป้าหมาย: เพิ่มระดับ Maturity ให้เยอะที่สุด และคุม Trust/Budget ไม่ให้ต่ำกว่า 20')}>ⓘ เป้าหมายระบบ</button>
-        </div>
-
-        <div className="main-layout">
-          <div className="center-board">
-            <div className="stats-row">
-              {drawStat('ความเชื่อมั่น (Trust)', gameState.trust, '🤝')}
-              {drawStat('งบดุล (Budget)', gameState.budget, '💰')}
-              {drawStat('เกราะความเสี่ยง (Risk)', gameState.risk, '🛡️')}
-              {drawStat('ระดับวุฒิภาวะรวม', mTotal, '✨', 0)}
+        <div className="gameplay-container">
+          {/* Left Side: Gameplay Area */}
+          <div className="gameplay-main">
+            <div className="tactical-stats-row">
+              {drawStat('Trust', gameState.trust, 'Heart', 'trust')}
+              {drawStat('Budget', gameState.budget, 'DollarSign', 'budget')}
+              {drawStat('Risk', gameState.risk, 'Shield', 'risk')}
+              {drawStat('Total Maturity', mTotal, 'Zap', 'qol')}
             </div>
-            
-            <Dice ref={diceRef} onRollComplete={handleRollComplete} rollDisabled={eventModal || resultModal || bossActive} />
 
-            <Board 
-              currentPosition={gameState.position} 
-              charAvatar={gameState.char.avatar} 
-              charIconName={gameState.char.iconName} 
-              charImg={gameState.char.img}
-              landing={landing}
-              tileFeedback={tileFeedback}
+            <div className="board-svg-wrapper" style={{ flex: 1, position: 'relative', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+              <Board 
+                currentPosition={gameState.position} 
+                charAvatar={gameState.char.avatar} 
+                charIconName={gameState.char.iconName} 
+                charImg={gameState.char.img}
+                landing={landing}
+                tileFeedback={tileFeedback}
+              />
+            </div>
+
+            <div className="evaluation-action-bar" style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '10px', color: 'var(--primary-blue)', fontWeight: 800, marginBottom: '8px', letterSpacing: '2px' }}>SYSTEM READY FOR EXECUTION</div>
+                <Dice ref={diceRef} onRollComplete={handleRollComplete} rollDisabled={eventModal || resultModal || bossActive} label="EXECUTE EVALUATION RUN" />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: Sidebar Status */}
+          <div className="gameplay-sidebar">
+            <RightPanel 
+              gameState={gameState} 
+              onUseAbility={handleUseAbility} 
+              onUseItem={handleUseItem} 
+              onExecutiveOverride={() => {
+                if (gameState.overrideUsed) {
+                  showToast('Executive Override already deployed.');
+                  return;
+                }
+                soundEngine.playSuccess();
+                setGameState(prev => ({ ...prev, trust: prev.trust + 20, budget: prev.budget + 20, overrideUsed: true }));
+                showToast('Executive Override Executed: Stats Boosted.');
+              }}
             />
           </div>
-
-          <RightPanel gameState={gameState} onUseAbility={handleUseAbility} onUseItem={handleUseItem} />
         </div>
       </div>
 
